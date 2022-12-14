@@ -10,11 +10,13 @@
 <%@ page import="classes.ArticleDAO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="classes.ArticleVO" %>
+<%@ page import="classes.ArticleCategoryVO" %>
 
 
 <%
     ArticleDAO articleDAO = new ArticleDAO();
     List<ArticleVO> articles = articleDAO.getArticles();
+    List<ArticleCategoryVO> articleCategories = articleDAO.getArticleCategories();
 %>
 <html>
 <head>
@@ -31,6 +33,9 @@
             <input type="date" name="toDate">
             <select name="articleCategory">
                 <option value="all">전체 카테고리</option>
+                <% for (ArticleCategoryVO articleCategory : articleCategories) {%>
+                <option value="<%=articleCategory.getName()%>>"><%=articleCategory.getName()%></option>
+                <%}%>
             </select>
             <input type="text" name="query" placeholder="검색어를 입력해 주세요. (제목 + 작성자 + 내용)">
             <input type="submit" value="검색">

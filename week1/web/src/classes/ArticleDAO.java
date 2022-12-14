@@ -57,9 +57,39 @@ public class ArticleDAO {
                 conn.close();
             }
         } catch (SQLException e) {
+            System.out.println("article error");
             e.printStackTrace();
         }
         return articlesList;
+    }
+
+    public List getArticleCategories() {
+        try {
+            conn = DriverManager.getConnection(url,userName,password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<ArticleCategoryVO> articleCategoriesList = new ArrayList<>();
+        try {
+            query = "select name from article_category";
+            pstmt = conn.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String name = rs.getString("name");
+                ArticleCategoryVO articleCategory = new ArticleCategoryVO();
+                articleCategory.setName(name);
+                articleCategoriesList.add(articleCategory);
+                rs.close();
+                pstmt.close();
+                conn.close();
+            }
+        } catch (SQLException e) {
+            System.out.println("category error");
+            e.printStackTrace();
+        }
+        return articleCategoriesList;
     }
 
     public int test() {
