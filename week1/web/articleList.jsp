@@ -14,12 +14,38 @@
 
 <%! ArticleDAO articleDAO = new ArticleDAO(); %>
 <%
-
+    // 카테고리 값 호출
     List<ArticleCategoryVO> articleCategories = articleDAO.getArticleCategories();
 %>
+
 <%
+    System.out.println(session.getAttribute("query"));
+    // 검색 조건 값 호출
+    String fromDate = request.getParameter("fromDate");
+    String toDate = request.getParameter("toDate");
+    String category = request.getParameter("category");
+    String query = request.getParameter("query");
 
+    System.out.printf("%s,%s,%s,%s%n",fromDate,toDate,category,query);
+%>
+<%
+    if (fromDate != null){
+        session.setAttribute("fromDate",fromDate);
+    }
+    if (toDate != null){
+        session.setAttribute("toDate",toDate);
+    }
+    if (category != null){
+        session.setAttribute("category",category);
+    }
+    if (query != null){
+        session.setAttribute("query",query);
+    }
+    //request값이 null이라면 (초기 페이지라면) 디폴트 리스트 반환
+    //아니라면 값에 맞추어 표시
 
+%>
+<%
     int pageSize = 10; // 한 페이지에 출력할 레코드 수
     int pageNum;
     // 페이지 링크를 클릭한 번호 / 현재 페이지
@@ -29,8 +55,6 @@
     } else {
         pageNum = Integer.parseInt(pageNumParam);
     }
-
-
 
     // 연산을 하기 위한 pageNum 형변환 / 현재 페이지
     int currentPage = pageSize * (pageNum - 1);
@@ -56,15 +80,15 @@
 <div class="board">
     <div class="searchBar">
         <!--검색바-->
-        <form>
+        <form action="articleList.jsp" method="post">
             등록일
-            <input type="date" name="fromDate">
+            <input type="date" name="fromDate" value="<%=session.getAttribute("fromDate")%>">
             ~
-            <input type="date" name="toDate">
-            <select name="articleCategory">
+            <input type="date" name="toDate" value="<%=session.getAttribute("toDate")%>">
+            <select name="category">
                 <option value="all">전체 카테고리</option>
                 <% for (ArticleCategoryVO articleCategory : articleCategories) {%>
-                <option value="<%=articleCategory.getName()%>>"><%=articleCategory.getName()%></option>
+                <option value="<%=articleCategory.getName()%>"><%=articleCategory.getName()%></option>
                 <%}%>
             </select>
             <input type="text" name="query" placeholder="검색어를 입력해 주세요. (제목 + 작성자 + 내용)">
@@ -166,4 +190,29 @@
 
 <!--목록-->
 </body>
+
+<script>
+
+    //카테고리의 옵션값과 세션의 옵션값이 일치하면 selected 추가
+    let category = '<%=session.getAttribute("category")%>';
+    let categoryOptions = document.querySelectorAll('[name=category]')[0];
+
+    for (let i=0; i<categoryOptions.length; i++) {
+        let value = categoryOptions.options[i].value;
+        if (value == category) {
+            categoryOptions.options[i].setAttribute('selected',true)
+        }
+    }
+
+
+    //검색 input에 null 값일 시 pass 아니면 세션값 표시
+    let sessionQuery = '<%=session.getAttribute("query")%>';
+    let queryInputBox = document.querySelectorAll('[name=query]')[0];
+
+    if (sessionQuery != null) {
+        queryInputBox.setAttribute('value',sessionQuery);
+    }
+
+
+</script>
 </html>
