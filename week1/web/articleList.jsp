@@ -12,16 +12,46 @@
 <%@ page import="classes.ArticleVO" %>
 <%@ page import="classes.ArticleCategoryVO" %>
 
-
+<%! ArticleDAO articleDAO = new ArticleDAO(); %>
 <%
-    ArticleDAO articleDAO = new ArticleDAO();
-    List<ArticleVO> articles = articleDAO.getArticles();
+
     List<ArticleCategoryVO> articleCategories = articleDAO.getArticleCategories();
 %>
+<%
+
+
+    int pageSize = 10; // 한 페이지에 출력할 레코드 수
+    int pageNum;
+    // 페이지 링크를 클릭한 번호 / 현재 페이지
+    String pageNumParam = request.getParameter("pageNum");
+    if (pageNumParam == null) {
+        pageNum = 1;
+    } else {
+        pageNum = Integer.parseInt(pageNumParam);
+    }
+
+
+
+    // 연산을 하기 위한 pageNum 형변환 / 현재 페이지
+    int currentPage = pageSize * (pageNum - 1);
+
+    List<ArticleVO> articles = articleDAO.getArticles(pageSize,currentPage);
+    int numberOfArticles = articleDAO.getNumberOfArticles();
+%>
+
+
+
 <html>
 <head>
     <title>Title</title>
 </head>
+<style>
+    a { text-decoration: none; color: black; }
+    a:visited { text-decoration: none; }
+    a:hover { text-decoration: none; }
+    a:focus { text-decoration: none; }
+    a:hover, a:active { text-decoration: none; }
+</style>
 <body>
 <div class="board">
     <div class="searchBar">
@@ -44,7 +74,7 @@
     <div class="articleList">
         <div class="articleListHeader">
 
-            <h5>총<%=articles.size()%>건</h5>
+            <h5>총<%=numberOfArticles%>건</h5>
         </div>
         <div class="articleListMain">
 
@@ -67,10 +97,66 @@
                     <td><%=article.getLastUpdated()%></td>
                 </tr>
                 <% }%>
+            <div class="articleListPagination">
+                <tr>
+                    <td colspan="6" align="center">
+                        <%	// 페이징  처리
+                            if(numberOfArticles > 0){
+                                // 총 페이지의 수
+                                int pageCount = numberOfArticles / pageSize + (numberOfArticles%pageSize == 0 ? 0 : 1);
+                                // 한 페이지에 보여줄 페이지 블럭(링크) 수
+                                int pageBlock = 10;
+                                // 한 페이지에 보여줄 시작 및 끝 번호(예 : 1, 2, 3 ~ 10 / 11, 12, 13 ~ 20)
+                                int startPage = ((currentPage-1)/pageBlock)*pageBlock+1;
+                                int endPage = startPage + pageBlock - 1;
+                                if(endPage > pageCount){
+                                    endPage = pageCount;
+                                }
+                        %>
+                        <a href="articleList.jsp?pageNum=<%=1%>"><<</a>
+                        <%
+                           if(pageNum > 1) {
+                        %>
+                        <a href="articleList.jsp?pageNum=<%=pageNum - 1%>"><</a>
+                        <%
+                            } else {
+                        %>
+                        <a href="articleList.jsp?pageNum=<%=1%>"><</a>
+                        <%
+                            }
+                        %>
+                        <%
+                            for(int i=startPage; i <= endPage; i++){
+                                if(i == pageNum){ // 현재 페이지에 색 표시
+                        %>
+                        <a style="color: red"><%=i %></a>
+                        <%
+                        } else { // 현재 페이지가 아닌 경우 링크 설정
+                        %>
+                        <a href="articleList.jsp?pageNum=<%=i%>"><%=i %></a>
+                        <%
+                                }
+                            } // for end
+                        %>
+                        <%
+                            if(pageNum != pageCount) {
+                        %>
+                        <a href="articleList.jsp?pageNum=<%=pageNum + 1%>">></a>
+                        <%
+                        } else {
+                        %>
+                        <a href="articleList.jsp?pageNum=<%=pageCount%>">></a>
+                        <%
+                            }
+                        %>
+                        <a href="articleList.jsp?pageNum=<%=pageCount%>">>></a>
+                        <%
+                            } // last
+                        %>
+                    </td>
+                </tr>
+            </div>
             </table>
-        </div>
-        <div class="articleListPagination">
-            1,2,3
         </div>
         <div class="articleListFooter">
             <input type="submit" value="등록">

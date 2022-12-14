@@ -15,7 +15,7 @@ public class ArticleDAO {
 
     }
 
-    public List getArticles() {
+    public List getArticles(int pageSize, int currentPage) {
         try {
             conn = DriverManager.getConnection(url,userName,password);
         } catch (SQLException e) {
@@ -25,8 +25,14 @@ public class ArticleDAO {
         ResultSet rs = null;
         List<ArticleVO> articlesList = new ArrayList<>();
         try {
-            query = "select article_category.name, article.* from article_category, article where article_category.article_category_id = article.article_id";
+            query = "select article_category.name, article.* from " +
+                    "article_category right outer join article " +
+                    "on article.article_category_id = article_category.article_category_id " +
+                    "limit ? " +
+                    "offset ?";
             pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, pageSize);
+            pstmt.setInt(2, currentPage);
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("article_id");
@@ -90,6 +96,32 @@ public class ArticleDAO {
             e.printStackTrace();
         }
         return articleCategoriesList;
+    }
+
+    public int getNumberOfArticles() {
+        try {
+            conn = DriverManager.getConnection(url,userName,password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int numberOfArticles = 0;
+        try {
+            query = "select COUNT(*) cnt from article";
+            pstmt = conn.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                numberOfArticles = rs.getInt("cnt");
+                rs.close();
+                pstmt.close();
+                conn.close();
+            }
+        } catch (SQLException e) {
+            System.out.println("category error");
+            e.printStackTrace();
+        }
+        return numberOfArticles;
     }
 
     public int test() {
