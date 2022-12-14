@@ -7,17 +7,15 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.sql.*" %>
+<%@ page import="classes.ArticleDAO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="classes.ArticleVO" %>
+
 
 <%
-    System.out.println("자바 시작");
-    //mariaDB 준비
-    String url = "jdbc:mariadb://localhost:3306/eBrain_week1";
-    String userName = "root";
-    String password = "1234";
-    // mariaDB 연결
-    Connection conn = DriverManager.getConnection(url, userName, password);
-    System.out.println(conn + "<-- conn"); %>
-
+    ArticleDAO articleDAO = new ArticleDAO();
+    List<ArticleVO> articles = articleDAO.getArticles();
+%>
 <html>
 <head>
     <title>Title</title>
@@ -26,7 +24,6 @@
 <div class="board">
     <div class="searchBar">
         <!--검색바-->
-
         <form>
             등록일
             <input type="date" name="fromDate">
@@ -34,15 +31,6 @@
             <input type="date" name="toDate">
             <select name="articleCategory">
                 <option value="all">전체 카테고리</option>
-                <%
-                    PreparedStatement pstmt = conn.prepareStatement("select * from article_category");
-                    ResultSet rs = pstmt.executeQuery();
-                %>
-                <% while (rs.next()) {
-                    String articleCategory = rs.getString("name");
-                %>
-                <option value="<%=articleCategory%>"><%=articleCategory%></option>
-                <% }%>
             </select>
             <input type="text" name="query" placeholder="검색어를 입력해 주세요. (제목 + 작성자 + 내용)">
             <input type="submit" value="검색">
@@ -50,13 +38,11 @@
     </div>
     <div class="articleList">
         <div class="articleListHeader">
-            <h5>총512건</h5>
+
+            <h5>총<%=articles.size()%>건</h5>
         </div>
         <div class="articleListMain">
-            <%
-                pstmt = conn.prepareStatement("select article_category.name, article.* from article_category, article where article_category.article_category_id = article.article_id");
-                rs = pstmt.executeQuery();
-            %>
+
             <table border="1">
                 <tr>
                     <td>카테고리</td>
@@ -66,32 +52,16 @@
                     <td>등록 일시</td>
                     <td>수정 일시</td>
                 </tr>
-
-                <%
-                    while (rs.next()) {
-                %>
+                <% for (ArticleVO article : articles) {%>
                 <tr>
-                    <td><%=rs.getString("article_category.name") %>
-                    </td>
-                    <td><%=rs.getString("title") %>
-                    </td>
-                    <td><%=rs.getString("writer") %>
-                    </td>
-                    <td><%=rs.getString("views") %>
-                    </td>
-                    <td><%=rs.getString("date_created") %>
-                    </td>
-                    <td><% String lastUpdated = rs.getString("last_updated");
-                        if (lastUpdated != null) { %>
-                        <%=lastUpdated%>
-                        <%} else {%>
-                        -<%}%>
-                    </td>
+                    <td><%=article.getArticleCategoryName()%></td>
+                    <td><%=article.getTitle()%></td>
+                    <td><%=article.getWriter()%></td>
+                    <td><%=article.getViews()%></td>
+                    <td><%=article.getDateCreated()%></td>
+                    <td><%=article.getLastUpdated()%></td>
                 </tr>
-
-                <%
-                    }
-                %>
+                <% }%>
             </table>
         </div>
         <div class="articleListPagination">
