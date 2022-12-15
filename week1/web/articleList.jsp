@@ -11,8 +11,10 @@
 <%@ page import="java.util.List" %>
 <%@ page import="classes.ArticleVO" %>
 <%@ page import="classes.ArticleCategoryVO" %>
+<%@ page import="java.util.HashMap" %>
 
-<%! ArticleDAO articleDAO = new ArticleDAO(); %>
+<%! ArticleDAO articleDAO = new ArticleDAO();%>
+<% request.setCharacterEncoding("utf-8") ;%>
 <%
     // 카테고리 값 호출
     List<ArticleCategoryVO> articleCategories = articleDAO.getArticleCategories();
@@ -29,17 +31,26 @@
     System.out.printf("%s,%s,%s,%s%n",fromDate,toDate,category,query);
 %>
 <%
+    HashMap<String,String> queryStrings = new HashMap<>();
     if (fromDate != null){
-        session.setAttribute("fromDate",fromDate);
+        request.setAttribute("fromDate",fromDate);
+        queryStrings.put("fromDate",fromDate);
     }
     if (toDate != null){
-        session.setAttribute("toDate",toDate);
+        request.setAttribute("toDate",toDate);
+        queryStrings.put("toDate",toDate);
     }
     if (category != null){
-        session.setAttribute("category",category);
+        request.setAttribute("category",category);
+        queryStrings.put("category",category);
     }
     if (query != null){
-        session.setAttribute("query",query);
+        request.setAttribute("query",query);
+        if (query.equals("")){
+            queryStrings.put("query","%");
+        } else {
+            queryStrings.put("query", "%" + query + "%");
+        }
     }
     //request값이 null이라면 (초기 페이지라면) 디폴트 리스트 반환
     //아니라면 값에 맞추어 표시
@@ -59,7 +70,12 @@
     // 연산을 하기 위한 pageNum 형변환 / 현재 페이지
     int currentPage = pageSize * (pageNum - 1);
 
-    List<ArticleVO> articles = articleDAO.getArticles(pageSize,currentPage);
+    List<ArticleVO> articles;
+    if (query == null){
+        articles = articleDAO.getArticles(pageSize,currentPage);
+    } else {
+        articles = articleDAO.getArticles(pageSize,currentPage,queryStrings);
+    }
     int numberOfArticles = articleDAO.getNumberOfArticles();
 %>
 
@@ -67,6 +83,7 @@
 
 <html>
 <head>
+    <meta charset="utf-8">
     <title>Title</title>
 </head>
 <style>
@@ -82,11 +99,11 @@
         <!--검색바-->
         <form action="articleList.jsp" method="post">
             등록일
-            <input type="date" name="fromDate" value="<%=session.getAttribute("fromDate")%>">
+            <input type="date" name="fromDate" value="<%=request.getAttribute("fromDate")%>">
             ~
-            <input type="date" name="toDate" value="<%=session.getAttribute("toDate")%>">
+            <input type="date" name="toDate" value="<%=request.getAttribute("toDate")%>">
             <select name="category">
-                <option value="all">전체 카테고리</option>
+                <option value="%">전체 카테고리</option>
                 <% for (ArticleCategoryVO articleCategory : articleCategories) {%>
                 <option value="<%=articleCategory.getName()%>"><%=articleCategory.getName()%></option>
                 <%}%>
@@ -194,7 +211,7 @@
 <script>
 
     //카테고리의 옵션값과 세션의 옵션값이 일치하면 selected 추가
-    let category = '<%=session.getAttribute("category")%>';
+    let category = '<%=request.getAttribute("category")%>';
     let categoryOptions = document.querySelectorAll('[name=category]')[0];
 
     for (let i=0; i<categoryOptions.length; i++) {
@@ -206,11 +223,11 @@
 
 
     //검색 input에 null 값일 시 pass 아니면 세션값 표시
-    let sessionQuery = '<%=session.getAttribute("query")%>';
+    let requestQuery = '<%=request.getAttribute("query")%>';
     let queryInputBox = document.querySelectorAll('[name=query]')[0];
 
-    if (sessionQuery != null) {
-        queryInputBox.setAttribute('value',sessionQuery);
+    if (requestQuery != 'null') {
+        queryInputBox.setAttribute('value',requestQuery);
     }
 
 
