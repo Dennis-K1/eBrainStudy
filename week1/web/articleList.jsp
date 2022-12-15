@@ -71,12 +71,15 @@
     int currentPage = pageSize * (pageNum - 1);
 
     List<ArticleVO> articles;
-    if (query == null){
+    int numberOfArticles;
+
+    if (fromDate == null || fromDate.equals("null")){
         articles = articleDAO.getArticles(pageSize,currentPage);
+        numberOfArticles = articleDAO.getNumberOfArticles();
     } else {
         articles = articleDAO.getArticles(pageSize,currentPage,queryStrings);
+        numberOfArticles = articleDAO.getNumberOfArticles(queryStrings);
     }
-    int numberOfArticles = articleDAO.getNumberOfArticles();
 %>
 
 
@@ -154,15 +157,15 @@
                                     endPage = pageCount;
                                 }
                         %>
-                        <a href="articleList.jsp?pageNum=<%=1%>"><<</a>
+                        <a href="#" onclick="javascript:pagination('/articleList.jsp',<%=1%>);"><<</a>
                         <%
                            if(pageNum > 1) {
                         %>
-                        <a href="articleList.jsp?pageNum=<%=pageNum - 1%>"><</a>
+                        <a href="#" onclick="javascript:pagination('/articleList.jsp',<%=pageNum - 1%>);"><</a>
                         <%
                             } else {
                         %>
-                        <a href="articleList.jsp?pageNum=<%=1%>"><</a>
+                        <a href="#" onclick="javascript:pagination('/articleList.jsp',<%=1%>);"><</a>
                         <%
                             }
                         %>
@@ -174,7 +177,7 @@
                         <%
                         } else { // 현재 페이지가 아닌 경우 링크 설정
                         %>
-                        <a href="articleList.jsp?pageNum=<%=i%>"><%=i %></a>
+                        <a href="#" onclick="javascript:pagination('/articleList.jsp',<%=i%>);"><%=i%></a>
                         <%
                                 }
                             } // for end
@@ -182,15 +185,15 @@
                         <%
                             if(pageNum != pageCount) {
                         %>
-                        <a href="articleList.jsp?pageNum=<%=pageNum + 1%>">></a>
+                        <a href="#" onclick="javascript:pagination('/articleList.jsp',<%=pageNum + 1%>);">></a>
                         <%
                         } else {
                         %>
-                        <a href="articleList.jsp?pageNum=<%=pageCount%>">></a>
+                        <a href="#" onclick="javascript:pagination('/articleList.jsp',<%=pageCount%>);">></a>
                         <%
                             }
                         %>
-                        <a href="articleList.jsp?pageNum=<%=pageCount%>">>></a>
+                        <a href="#" onclick="javascript:pagination('/articleList.jsp',<%=pageCount%>);">>></a>
                         <%
                             } // last
                         %>
@@ -230,6 +233,32 @@
         queryInputBox.setAttribute('value',requestQuery);
     }
 
+    //페이징 함수
+    const pagination = (url, pageNum) => {
+        let form = document.createElement("form");
+        let parm = new Array();
+        let input = new Array();
+
+        form.action = url;
+        form.method = "post";
+
+        parm.push( ['pageNum', pageNum]);
+
+        parm.push( ['fromDate', '<%=request.getAttribute("fromDate")%>'] );
+        parm.push( ['toDate', '<%=request.getAttribute("toDate")%>'] );
+        parm.push( ['category', '<%=request.getAttribute("category")%>'] );
+        parm.push( ['query', '<%=request.getAttribute("query")%>'] );
+
+        for (let i = 0; i < parm.length; i++) {
+            input[i] = document.createElement("input");
+            input[i].setAttribute("type", "hidden");
+            input[i].setAttribute('name', parm[i][0]);
+            input[i].setAttribute("value", parm[i][1]);
+            form.appendChild(input[i]);
+        }
+        document.body.appendChild(form);
+        form.submit();
+    }
 
 </script>
 </html>
