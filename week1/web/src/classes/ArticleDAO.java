@@ -29,6 +29,7 @@ public class ArticleDAO {
             query = "select article_category.name, article.* from " +
                     "article_category right outer join article " +
                     "on article.article_category_id = article_category.article_category_id " +
+                    "order by article.article_id asc " +
                     "limit ? " +
                     "offset ?";
             pstmt = conn.prepareStatement(query);
@@ -92,6 +93,7 @@ public class ArticleDAO {
                     "    (? < date_created  and (? + INTERVAL 1 DAY) > date_created)" +
                     "    and article_category.name LIKE ?" +
                     "    and (title LIKE ? or writer LIKE ? or content like ?)" +
+                    "order by article.article_id asc " +
                     "limit ? " +
                     "offset ?";
             pstmt = conn.prepareStatement(query);
@@ -189,7 +191,53 @@ public class ArticleDAO {
                 conn.close();
             }
         } catch (SQLException e) {
-            System.out.println("category error");
+            System.out.println("getNumberOfArticles error");
+            e.printStackTrace();
+        }
+        return numberOfArticles;
+    }
+
+    /**
+     * 검색 조건이 있을 경우 반환되는 게시글의 수
+     * **/
+    public int getNumberOfArticles(HashMap<String,String> queryStrings) {
+        try {
+            conn = DriverManager.getConnection(url,userName,password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int numberOfArticles = 0;
+        if (queryStrings.get("fromDate").equals("") && queryStrings.get("toDate").equals("")) {
+            queryStrings.put("fromDate","2000-01-01");
+            queryStrings.put("toDate","2099-01-01");
+        }
+        try {
+            query = "select COUNT(*) cnt " +
+                    "from article_category " +
+                    "right outer join article " +
+                    "on article.article_category_id = article_category.article_category_id " +
+                    "where" +
+                    "    (? < date_created  and (? + INTERVAL 1 DAY) > date_created)" +
+                    "    and article_category.name LIKE ?" +
+                    "    and (title LIKE ? or writer LIKE ? or content like ?)";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, queryStrings.get("fromDate"));
+            pstmt.setString(2, queryStrings.get("toDate"));
+            pstmt.setString(3, queryStrings.get("category"));
+            pstmt.setString(4, queryStrings.get("query"));
+            pstmt.setString(5, queryStrings.get("query"));
+            pstmt.setString(6, queryStrings.get("query"));
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                numberOfArticles = rs.getInt("cnt");
+                rs.close();
+                pstmt.close();
+                conn.close();
+            }
+        } catch (SQLException e) {
+            System.out.println("getNumberOfArticles error");
             e.printStackTrace();
         }
         return numberOfArticles;
