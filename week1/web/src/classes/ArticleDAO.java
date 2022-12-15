@@ -29,7 +29,7 @@ public class ArticleDAO {
             query = "select article_category.name, article.* from " +
                     "article_category right outer join article " +
                     "on article.article_category_id = article_category.article_category_id " +
-                    "order by article.article_id asc " +
+                    "order by article.article_id desc " +
                     "limit ? " +
                     "offset ?";
             pstmt = conn.prepareStatement(query);
@@ -83,6 +83,8 @@ public class ArticleDAO {
         if (queryStrings.get("fromDate").equals("") && queryStrings.get("toDate").equals("")) {
             queryStrings.put("fromDate","2000-01-01");
             queryStrings.put("toDate","2099-01-01");
+        } else if (queryStrings.get("toDate").equals("")) {
+            queryStrings.put("toDate","2099-01-01");
         }
         try {
             query = "select article_category.name, article.* " +
@@ -93,7 +95,7 @@ public class ArticleDAO {
                     "    (? < date_created  and (? + INTERVAL 1 DAY) > date_created)" +
                     "    and article_category.name LIKE ?" +
                     "    and (title LIKE ? or writer LIKE ? or content like ?)" +
-                    "order by article.article_id asc " +
+                    "order by article.article_id desc " +
                     "limit ? " +
                     "offset ?";
             pstmt = conn.prepareStatement(query);
