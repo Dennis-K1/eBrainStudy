@@ -73,6 +73,7 @@
     List<ArticleVO> articles;
     int numberOfArticles;
 
+    // 처음 페이지에 들어와서 (==null), 페이지 이동할시 (equals("null") 자바스크립트 post값)
     if (fromDate == null || fromDate.equals("null")){
         articles = articleDAO.getArticles(pageSize,currentPage);
         numberOfArticles = articleDAO.getNumberOfArticles();
@@ -105,7 +106,7 @@
             <input type="date" name="fromDate" value="<%=request.getAttribute("fromDate")%>">
             ~
             <input type="date" name="toDate" value="<%=request.getAttribute("toDate")%>">
-            <select name="category">
+            <select  name="category">
                 <option value="%">전체 카테고리</option>
                 <% for (ArticleCategoryVO articleCategory : articleCategories) {%>
                 <option value="<%=articleCategory.getName()%>"><%=articleCategory.getName()%></option>
@@ -134,7 +135,7 @@
                 <% for (ArticleVO article : articles) {%>
                 <tr>
                     <td><%=article.getArticleCategoryName()%></td>
-                    <td><%=article.getTitle()%></td>
+                    <td><a href="#" onclick="articleDetail('/articleDetail.jsp',<%=article.getId()%>);"><%=article.getTitle()%></a></td>
                     <td><%=article.getWriter()%></td>
                     <td><%=article.getViews()%></td>
                     <td><%=article.getDateCreated()%></td>
@@ -203,7 +204,7 @@
             </table>
         </div>
         <div class="articleListFooter">
-            <input type="submit" value="등록">
+            <button onclick="location.href = '/articleUploadForm.jsp';">등록</button>
         </div>
     </div>
 </div>
@@ -260,5 +261,28 @@
         form.submit();
     }
 
+    //게시물 보기 함수
+    const articleDetail = (url, articleId) => {
+        let form = document.createElement("form");
+        let parm = new Array();
+        let input = new Array();
+        form.action = url + "?articleId=" + articleId;
+        form.method = "post";
+
+        parm.push( ['fromDate', '<%=request.getAttribute("fromDate")%>'] );
+        parm.push( ['toDate', '<%=request.getAttribute("toDate")%>'] );
+        parm.push( ['category', '<%=request.getAttribute("category")%>'] );
+        parm.push( ['query', '<%=request.getAttribute("query")%>'] );
+
+        for (let i = 0; i < parm.length; i++) {
+            input[i] = document.createElement("input");
+            input[i].setAttribute("type", "hidden");
+            input[i].setAttribute('name', parm[i][0]);
+            input[i].setAttribute("value", parm[i][1]);
+            form.appendChild(input[i]);
+        }
+        document.body.appendChild(form);
+        form.submit();
+    }
 </script>
 </html>
