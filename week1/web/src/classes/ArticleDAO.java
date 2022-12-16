@@ -8,7 +8,7 @@ import java.util.List;
 public class ArticleDAO {
     private String url = "jdbc:mariadb://localhost:3306/eBrain_week1";
     private String userName = "root";
-    private String password = "1234";
+    private String userPassword = "1234";
     private String query = "";
     private Connection conn;
 
@@ -18,7 +18,7 @@ public class ArticleDAO {
 
     public List getArticles(int pageSize, int currentPage) {
         try {
-            conn = DriverManager.getConnection(url,userName,password);
+            conn = DriverManager.getConnection(url,userName,userPassword);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -73,7 +73,7 @@ public class ArticleDAO {
 
     public List getArticles(int pageSize, int currentPage, HashMap<String,String> queryStrings) {
         try {
-            conn = DriverManager.getConnection(url,userName,password);
+            conn = DriverManager.getConnection(url,userName,userPassword);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -146,7 +146,7 @@ public class ArticleDAO {
 
     public List getArticleCategories() {
         try {
-            conn = DriverManager.getConnection(url,userName,password);
+            conn = DriverManager.getConnection(url,userName,userPassword);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -154,12 +154,14 @@ public class ArticleDAO {
         ResultSet rs = null;
         List<ArticleCategoryVO> articleCategoriesList = new ArrayList<>();
         try {
-            query = "select name from article_category";
+            query = "select article_category_id, name from article_category";
             pstmt = conn.prepareStatement(query);
             rs = pstmt.executeQuery();
             while (rs.next()) {
+                int id = rs.getInt("article_category_id");
                 String name = rs.getString("name");
                 ArticleCategoryVO articleCategory = new ArticleCategoryVO();
+                articleCategory.setId(id);
                 articleCategory.setName(name);
                 articleCategoriesList.add(articleCategory);
                 rs.close();
@@ -175,7 +177,7 @@ public class ArticleDAO {
 
     public int getNumberOfArticles() {
         try {
-            conn = DriverManager.getConnection(url,userName,password);
+            conn = DriverManager.getConnection(url,userName,userPassword);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -204,7 +206,7 @@ public class ArticleDAO {
      * **/
     public int getNumberOfArticles(HashMap<String,String> queryStrings) {
         try {
-            conn = DriverManager.getConnection(url,userName,password);
+            conn = DriverManager.getConnection(url,userName,userPassword);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -245,6 +247,36 @@ public class ArticleDAO {
         return numberOfArticles;
     }
 
+
+    public int uploadArticle(ArticleVO article) {
+        try {
+            conn = DriverManager.getConnection(url,userName,userPassword);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        PreparedStatement pstmt = null;
+        int result = 0;
+        try {
+            query = "insert into article " +
+                    "(board_id, article_category_id, writer, password, title, content) " +
+                    "values " +
+                    "(1, ?, ?, ?, ?, ?)";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, article.getArticleCategoryId());
+            pstmt.setString(2, article.getWriter());
+            pstmt.setString(3, article.getPassword());
+            pstmt.setString(4, article.getTitle());
+            pstmt.setString(5, article.getContent());
+            result = pstmt.executeUpdate();
+            System.out.println("DAO result is " + result);
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("article error");
+            e.printStackTrace();
+        }
+        return result;
+    }
     public int test() {
         return 1;
     }
