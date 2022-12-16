@@ -61,6 +61,7 @@
     int pageNum;
     // 페이지 링크를 클릭한 번호 / 현재 페이지
     String pageNumParam = request.getParameter("pageNum");
+    System.out.println(pageNumParam);
     if (pageNumParam == null) {
         pageNum = 1;
     } else {
@@ -135,7 +136,7 @@
                 <% for (ArticleVO article : articles) {%>
                 <tr>
                     <td><%=article.getArticleCategoryName()%></td>
-                    <td><a href="#" onclick="articleDetail('/articleDetail.jsp',<%=article.getId()%>);"><%=article.getTitle()%></a></td>
+                    <td><a href="#" onclick="articleDetail('/articleDetail.jsp',<%=article.getId()%>,<%=pageNum%>);"><%=article.getTitle()%></a></td>
                     <td><%=article.getWriter()%></td>
                     <td><%=article.getViews()%></td>
                     <td><%=article.getDateCreated()%></td>
@@ -262,12 +263,14 @@
     }
 
     //게시물 보기 함수
-    const articleDetail = (url, articleId) => {
+    const articleDetail = (url, articleId, pageNum) => {
         let form = document.createElement("form");
         let parm = new Array();
         let input = new Array();
         form.action = url + "?articleId=" + articleId;
         form.method = "post";
+
+        parm.push( ['pageNum', pageNum] );
 
         parm.push( ['fromDate', '<%=request.getAttribute("fromDate")%>'] );
         parm.push( ['toDate', '<%=request.getAttribute("toDate")%>'] );
