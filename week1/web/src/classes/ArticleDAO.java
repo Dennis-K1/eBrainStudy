@@ -144,6 +144,66 @@ public class ArticleDAO {
         return articlesList;
     }
 
+    public ArticleVO getArticle(int articleId) {
+        try {
+            conn = DriverManager.getConnection(url,userName,userPassword);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        ArticleVO article = new ArticleVO();
+        try {
+            query = "update article " +
+                    "set views = views + 1 " +
+                    "where article_id = ?";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, articleId);
+            pstmt.executeQuery();
+            System.out.println("getarticle" + pstmt);
+
+            query = "select article_category.name, article.* " +
+                    "from article_category " +
+                    "right outer join article " +
+                    "on article.article_category_id = article_category.article_category_id " +
+                    "where article_id = ?";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, articleId);
+            rs = pstmt.executeQuery();
+            System.out.println("getarticle" + pstmt);
+            while (rs.next()) {
+                int id = rs.getInt("article_id");
+                String articleCategoryName = rs.getString("article_category.name");
+                String title = rs.getString("title");
+                String content = rs.getString("content");
+                String writer = rs.getString("writer");
+                int views = rs.getInt("views");
+                String  dateCreated = rs.getString("date_created");
+                String  lastUpdated = rs.getString("last_updated");
+                if (lastUpdated == null) {
+                    lastUpdated = "-";
+                }
+                int fileAttached = rs.getInt("file_attached");
+                article.setId(id);
+                article.setArticleCategoryName(articleCategoryName);
+                article.setTitle(title);
+                article.setContent(content);
+                article.setWriter(writer);
+                article.setViews(views);
+                article.setDateCreated(dateCreated);
+                article.setLastUpdated(lastUpdated);
+                article.setFileAttached(fileAttached);
+                rs.close();
+                pstmt.close();
+                conn.close();
+            }
+        } catch (SQLException e) {
+            System.out.println("getArticle error");
+            e.printStackTrace();
+        }
+        return article;
+    }
+
     public List getArticleCategories() {
         try {
             conn = DriverManager.getConnection(url,userName,userPassword);
