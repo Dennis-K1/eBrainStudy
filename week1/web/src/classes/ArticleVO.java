@@ -10,6 +10,7 @@ import java.sql.Date;
 public class ArticleVO {
 
     private int id;
+    private int articleCategoryId;
     private String articleCategoryName;
     private String title;
     private String content;
