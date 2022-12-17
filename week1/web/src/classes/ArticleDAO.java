@@ -364,6 +364,35 @@ public class ArticleDAO {
         }
         return result;
     }
+
+    public int modifyArticle(String writer, String title, String content, int articleId) {
+        try {
+            conn = DriverManager.getConnection(url,userName,userPassword);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        PreparedStatement pstmt = null;
+        int result = 0;
+        try {
+            query = "UPDATE article " +
+                    "SET writer = ?, " +
+                "        title = ?, " +
+                    "    content = ? " +
+                    "where article_id = ?";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, writer);
+            pstmt.setString(2, title);
+            pstmt.setString(3, content);
+            pstmt.setInt(4, articleId);
+            result = pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("modify article error");
+            e.printStackTrace();
+        }
+        return result;
+    }
     public int test() {
         return 1;
     }

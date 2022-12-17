@@ -235,7 +235,11 @@
         let articlePassword = '<%=articlePassword%>';
         let action = document.querySelector('button[name="modalCancel"]').id
         if (password === articlePassword){
-            location.href = 'article' + action + 'Process.jsp'
+            if (action == 'Delete') {
+                location.href = 'article' + action + 'Process.jsp'
+            } else if (action == 'Modify') {
+                location.href = 'article' + action + 'Form.jsp'
+            }
         } else {
             alert('비밀번호가 다릅니다.')
         }
