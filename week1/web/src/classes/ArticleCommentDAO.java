@@ -42,7 +42,9 @@ public class ArticleCommentDAO {
                 comment.setId(id);
                 comment.setContent(content);
                 comment.setDateCreated(dateCreated);
-                commentList.add(comment);
+                if (content != null) {
+                    commentList.add(comment);
+                }
                 rs.close();
                 pstmt.close();
                 conn.close();

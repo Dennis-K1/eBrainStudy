@@ -30,6 +30,7 @@
     //댓글 객체
     ArticleCommentDAO articleCommentDAO = new ArticleCommentDAO();
     List<ArticleCommentVO> comments = articleCommentDAO.getComments(article.getId());
+    System.out.println(comments.size());
 
 %>
 
@@ -144,9 +145,10 @@
             첨부파일
         </div>
         <div class="comments mt-5 p-1 pb-3">
+
             <%
-                for (int commentOrder = 0; commentOrder < comments.size(); commentOrder++) {
-                    ArticleCommentVO comment = comments.get(commentOrder);
+            for (int commentOrder = 0; commentOrder < comments.size(); commentOrder++) {
+                ArticleCommentVO comment = comments.get(commentOrder);
             %>
             <div class="comment p-2">
                 <div><%=comment.getDateCreated()%></div>
@@ -157,7 +159,7 @@
             %>
             <div class="commentUpload mt-2 ms-2 ">
                 <form name="comment" method="post" action="commentUploadAProcess.jsp" onsubmit="return validateComment()">
-                    <textarea name="content"></textarea>
+                    <textarea name="content" placeholder=" 댓글을 입력해 주세요."></textarea>
                     <input type="hidden" name="articleId" value="<%=article.getId()%>">
                     <input type="hidden" name="fromDate" value="<%=request.getAttribute("fromDate")%>">
                     <input type="hidden" name="toDate" value="<%=request.getAttribute("toDate")%>">
