@@ -1,5 +1,9 @@
 <%@ page import="classes.ArticleDAO" %>
-<%@ page import="classes.ArticleVO" %><%--
+<%@ page import="classes.ArticleVO" %>
+<%@ page import="classes.ArticleCommentDAO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="classes.ArticleCommentVO" %>
+<%@ page import="classes.ArticleCommentDAO" %><%--
   Created by IntelliJ IDEA.
   User: bw120
   Date: 2022-12-12
@@ -19,6 +23,13 @@
 
 <%  int articleId = Integer.parseInt(request.getParameter("articleId"));
     ArticleVO article = articleDAO.getArticle(articleId);
+%>
+
+<%
+    //댓글 객체
+    ArticleCommentDAO articleCommentDAO = new ArticleCommentDAO();
+    List<ArticleCommentVO> comments = articleCommentDAO.getComments(article.getId());
+
 %>
 
 <%
@@ -74,18 +85,17 @@
             첨부파일
         </div>
         <div class="comments mt-5 p-1 pb-3">
+            <%
+                for (int commentOrder = 0; commentOrder < comments.size(); commentOrder++) {
+                    ArticleCommentVO comment = comments.get(commentOrder);
+            %>
             <div class="comment p-2">
-                <div>2022.05.14 16:32</div>
-                <div>blah blah</div>
+                <div><%=comment.getDateCreated()%></div>
+                <div><%=comment.getContent()%></div>
             </div>
-            <div class="comment p-2">
-                <div>2022.05.14 16:32</div>
-                <div>blah blah</div>
-            </div>
-            <div class="comment p-2">
-                <div>2022.05.14 16:32</div>
-                <div>blah blah</div>
-            </div>
+            <%
+                }
+            %>
             <div class="commentUpload mt-2 ms-2 ">
                 <form name="comment" method="post" action="commentUploadAProcess.jsp" onsubmit="return validateComment()">
                     <textarea name="content"></textarea>
