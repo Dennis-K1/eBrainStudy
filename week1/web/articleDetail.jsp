@@ -11,6 +11,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<% request.setCharacterEncoding("utf-8") ;%>
 <%! ArticleDAO articleDAO = new ArticleDAO();%>
 <%--
 1. url에 있는 파라미터로 게시글 번호 식별하여 게시글 표시
@@ -34,12 +35,51 @@
 
 <%
     // 뒤로가기 시 검색값 유지를 위한 세팅
-    request.setAttribute("fromDate",request.getAttribute("fromDate"));
-    request.setAttribute("toDate",request.getAttribute("toDate"));
-    request.setAttribute("category",request.getAttribute("category"));
-    request.setAttribute("query",request.getAttribute("query"));
-%>
 
+    //  commentUploadProcess에서 전달한 세션값이 하나라도 있을 경우 request에 저장
+    if (session.getAttribute("fromDate") != null ||
+        session.getAttribute("toDate") != null ||
+        session.getAttribute("categoruy") != null ||
+        session.getAttribute("query") != null ||
+        session.getAttribute("pageNum") != null
+    )
+    {
+        System.out.println("session worked from commentUploadProcess");
+        request.setAttribute("fromDate",session.getAttribute("fromDate"));
+        request.setAttribute("toDate",session.getAttribute("toDate"));
+        request.setAttribute("category",session.getAttribute("category"));
+        request.setAttribute("query",session.getAttribute("query"));
+        request.setAttribute("pageNum",session.getAttribute("pageNum"));
+
+        session.removeAttribute("fromDate");
+        session.removeAttribute("toDate");
+        session.removeAttribute("category");
+        session.removeAttribute("query");
+        session.removeAttribute("pageNum");
+    }
+
+
+    if (request.getAttribute("fromDate") != null ||
+            request.getAttribute("toDate") != null ||
+            request.getAttribute("categoruy") != null ||
+            request.getAttribute("query") != null ||
+            request.getAttribute("pageNum") != null)
+    {
+        request.setAttribute("fromDate",request.getAttribute("fromDate"));
+        request.setAttribute("toDate",request.getAttribute("toDate"));
+        request.setAttribute("category",request.getAttribute("category"));
+        request.setAttribute("query",request.getAttribute("query"));
+        request.setAttribute("pageNum",request.getAttribute("pageNum"));
+    } else {
+        request.setAttribute("fromDate", request.getParameter("fromDate"));
+        request.setAttribute("toDate", request.getParameter("toDate"));
+        request.setAttribute("category", request.getParameter("category"));
+        request.setAttribute("query", request.getParameter("query"));
+        request.setAttribute("pageNum", request.getParameter("pageNum"));
+    }
+    System.out.println(request.getAttribute("query") + "2222");
+
+%>
 
 
 <html>
@@ -100,6 +140,11 @@
                 <form name="comment" method="post" action="commentUploadAProcess.jsp" onsubmit="return validateComment()">
                     <textarea name="content"></textarea>
                     <input type="hidden" name="articleId" value="<%=article.getId()%>">
+                    <input type="hidden" name="fromDate" value="<%=request.getAttribute("fromDate")%>">
+                    <input type="hidden" name="toDate" value="<%=request.getAttribute("toDate")%>">
+                    <input type="hidden" name="category" value="<%=request.getAttribute("category")%>">
+                    <input type="hidden" name="query" value="<%=request.getAttribute("query")%>">
+                    <input type="hidden" name="pageNum" value="<%=request.getAttribute("pageNum")%>">
                     <button type="submit" class="commentButton">등록</button>
                 </form>
             </div>
@@ -138,11 +183,12 @@
         form.action = 'articleList.jsp';
         form.method = "post";
 
-        parm.push( ['pageNum',<%=request.getParameter("pageNum")%>]);
-        parm.push( ['fromDate', '<%=request.getParameter("fromDate")%>'] );
-        parm.push( ['toDate', '<%=request.getParameter("toDate")%>'] );
-        parm.push( ['category', '<%=request.getParameter("category")%>'] );
-        parm.push( ['query', '<%=request.getParameter("query")%>'] );
+        parm.push( ['pageNum',<%=request.getAttribute("pageNum")%>]);
+        parm.push( ['fromDate', '<%=request.getAttribute("fromDate")%>'] );
+        parm.push( ['toDate', '<%=request.getAttribute("toDate")%>'] );
+        parm.push( ['category', '<%=request.getAttribute("category")%>'] );
+        parm.push( ['query', '<%=request.getAttribute("query")%>'] );
+
 
         for (let i = 0; i < parm.length; i++) {
             input[i] = document.createElement("input");

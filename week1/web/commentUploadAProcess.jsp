@@ -27,11 +27,13 @@
   if (result == 1) {
 
     // 기존 검색값 유지하여 업데이트된 게시글 표시
-    request.setAttribute("fromDate",request.getAttribute("fromDate"));
-    request.setAttribute("toDate",request.getAttribute("toDate"));
-    request.setAttribute("category",request.getAttribute("category"));
-    request.setAttribute("query",request.getAttribute("query"));
+    session.setAttribute("fromDate",request.getParameter("fromDate"));
+    session.setAttribute("toDate",request.getParameter("toDate"));
+    session.setAttribute("category",request.getParameter("category"));
+    session.setAttribute("query",request.getParameter("query"));
+    session.setAttribute("pageNum",request.getParameter("pageNum"));
 
+    System.out.println(request.getParameter("query")+"11111111");
 
     response.sendRedirect("/articleDetail.jsp?articleId=" + articleId);
   }
