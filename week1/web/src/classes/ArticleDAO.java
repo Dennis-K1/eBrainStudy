@@ -65,7 +65,7 @@ public class ArticleDAO {
                 conn.close();
             }
         } catch (SQLException e) {
-            System.out.println("article error");
+            System.out.println("getArticles error (withour search params)");
             e.printStackTrace();
         }
         return articlesList;
@@ -107,7 +107,6 @@ public class ArticleDAO {
             pstmt.setString(6, queryStrings.get("query"));
             pstmt.setInt(7, pageSize);
             pstmt.setInt(8, currentPage);
-            System.out.println(pstmt.toString());
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("article_id");
@@ -138,7 +137,7 @@ public class ArticleDAO {
                 conn.close();
             }
         } catch (SQLException e) {
-            System.out.println("article error");
+            System.out.println("getArticles error");
             e.printStackTrace();
         }
         return articlesList;
@@ -160,7 +159,6 @@ public class ArticleDAO {
             pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, articleId);
             pstmt.executeQuery();
-            System.out.println("getarticle" + pstmt);
 
             query = "select article_category.name, article.* " +
                     "from article_category " +
@@ -170,7 +168,6 @@ public class ArticleDAO {
             pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, articleId);
             rs = pstmt.executeQuery();
-            System.out.println("getarticle" + pstmt);
             while (rs.next()) {
                 int id = rs.getInt("article_id");
                 String articleCategoryName = rs.getString("article_category.name");
@@ -255,7 +252,7 @@ public class ArticleDAO {
                 conn.close();
             }
         } catch (SQLException e) {
-            System.out.println("getNumberOfArticles error");
+            System.out.println("getNumberOfArticles(without query) error");
             e.printStackTrace();
         }
         return numberOfArticles;
@@ -328,11 +325,10 @@ public class ArticleDAO {
             pstmt.setString(4, article.getTitle());
             pstmt.setString(5, article.getContent());
             result = pstmt.executeUpdate();
-            System.out.println("DAO result is " + result);
             pstmt.close();
             conn.close();
         } catch (SQLException e) {
-            System.out.println("article error");
+            System.out.println("upload article error");
             e.printStackTrace();
         }
         return result;

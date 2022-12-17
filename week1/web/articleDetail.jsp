@@ -44,7 +44,6 @@
         session.getAttribute("pageNum") != null
     )
     {
-        System.out.println("session worked from commentUploadProcess");
         request.setAttribute("fromDate",session.getAttribute("fromDate"));
         request.setAttribute("toDate",session.getAttribute("toDate"));
         request.setAttribute("category",session.getAttribute("category"));
@@ -77,8 +76,6 @@
         request.setAttribute("query", request.getParameter("query"));
         request.setAttribute("pageNum", request.getParameter("pageNum"));
     }
-    System.out.println(request.getAttribute("query") + "2222");
-
 %>
 
 
@@ -165,8 +162,6 @@
     const validateComment = () => {
         let comment = document.forms['comment'];
         let content = comment['content'];
-
-        console.log(content);
 
         if (content.value == "" || content.value.length > 500) {
             alert("댓글은 1글자 이상 500글자 미만으로 작성해주세요.")

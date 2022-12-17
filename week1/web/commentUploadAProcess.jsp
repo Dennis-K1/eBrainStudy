@@ -33,8 +33,6 @@
     session.setAttribute("query",request.getParameter("query"));
     session.setAttribute("pageNum",request.getParameter("pageNum"));
 
-    System.out.println(request.getParameter("query")+"11111111");
-
     response.sendRedirect("/articleDetail.jsp?articleId=" + articleId);
   }
 %>

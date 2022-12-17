@@ -6,7 +6,6 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.sql.*" %>
 <%@ page import="classes.ArticleDAO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="classes.ArticleVO" %>
@@ -21,14 +20,11 @@
 %>
 
 <%
-    System.out.println(session.getAttribute("query"));
     // 검색 조건 값 호출
     String fromDate = request.getParameter("fromDate");
     String toDate = request.getParameter("toDate");
     String category = request.getParameter("category");
     String query = request.getParameter("query");
-
-    System.out.printf("%s,%s,%s,%s%n",fromDate,toDate,category,query);
 %>
 <%
     HashMap<String,String> queryStrings = new HashMap<>();
@@ -61,7 +57,6 @@
     int pageNum;
     // 페이지 링크를 클릭한 번호 / 현재 페이지
     String pageNumParam = request.getParameter("pageNum");
-    System.out.println(pageNumParam);
     if (pageNumParam == null || pageNumParam.equals("null")) {
         pageNum = 1;
     } else {
@@ -159,7 +154,6 @@
                                 if(endPage > pageCount){
                                     endPage = pageCount;
                                 }
-                                System.out.printf("pageNum = %s, currentPage = %s, startPage = %s, endPage = %s, pageCount = %s%n",pageNum,currentPage,startPage,endPage,pageCount);
                         %>
                         <a href="#" onclick="pagination('/articleList.jsp',<%=1%>);"><<</a>
                         <%
