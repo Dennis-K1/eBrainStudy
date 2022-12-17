@@ -31,7 +31,7 @@
 <body>
     <div class="articleUploadForm">
         <% //  onsubmit 유효성 검증 추가 필요 %>
-        <form name="article" method="post" action="articleUploadProcess.jsp" onsubmit="validateForm();">
+        <form name="article" method="post" action="articleUploadProcess.jsp" onsubmit="return validateForm();">
             <table>
                 <tr>
                     <td>카테고리 *</td>
