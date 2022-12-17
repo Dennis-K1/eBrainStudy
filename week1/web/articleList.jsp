@@ -62,7 +62,7 @@
     // 페이지 링크를 클릭한 번호 / 현재 페이지
     String pageNumParam = request.getParameter("pageNum");
     System.out.println(pageNumParam);
-    if (pageNumParam == null) {
+    if (pageNumParam == null || pageNumParam.equals("null")) {
         pageNum = 1;
     } else {
         pageNum = Integer.parseInt(pageNumParam);
@@ -147,27 +147,29 @@
                 <tr>
                     <td colspan="6" align="center">
                         <%	// 페이징  처리
+                            // currentpage = pageSize * (pageNum - 1)
                             if(numberOfArticles > 0){
                                 // 총 페이지의 수
                                 int pageCount = numberOfArticles / pageSize + (numberOfArticles%pageSize == 0 ? 0 : 1);
                                 // 한 페이지에 보여줄 페이지 블럭(링크) 수
                                 int pageBlock = 10;
                                 // 한 페이지에 보여줄 시작 및 끝 번호(예 : 1, 2, 3 ~ 10 / 11, 12, 13 ~ 20)
-                                int startPage = ((currentPage-1)/pageBlock)*pageBlock+1;
+                                int startPage = ((currentPage/pageBlock)/pageBlock)*pageBlock+1;
                                 int endPage = startPage + pageBlock - 1;
                                 if(endPage > pageCount){
                                     endPage = pageCount;
                                 }
+                                System.out.printf("pageNum = %s, currentPage = %s, startPage = %s, endPage = %s, pageCount = %s%n",pageNum,currentPage,startPage,endPage,pageCount);
                         %>
-                        <a href="#" onclick="javascript:pagination('/articleList.jsp',<%=1%>);"><<</a>
+                        <a href="#" onclick="pagination('/articleList.jsp',<%=1%>);"><<</a>
                         <%
                            if(pageNum > 1) {
                         %>
-                        <a href="#" onclick="javascript:pagination('/articleList.jsp',<%=pageNum - 1%>);"><</a>
+                        <a href="#" onclick="pagination('/articleList.jsp',<%=pageNum - 1%>);"><</a>
                         <%
                             } else {
                         %>
-                        <a href="#" onclick="javascript:pagination('/articleList.jsp',<%=1%>);"><</a>
+                        <a href="#" onclick="pagination('/articleList.jsp',<%=1%>);"><</a>
                         <%
                             }
                         %>
@@ -179,7 +181,7 @@
                         <%
                         } else { // 현재 페이지가 아닌 경우 링크 설정
                         %>
-                        <a href="#" onclick="javascript:pagination('/articleList.jsp',<%=i%>);"><%=i%></a>
+                        <a href="#" onclick="pagination('/articleList.jsp',<%=i%>);"><%=i%></a>
                         <%
                                 }
                             } // for end
@@ -187,15 +189,15 @@
                         <%
                             if(pageNum != pageCount) {
                         %>
-                        <a href="#" onclick="javascript:pagination('/articleList.jsp',<%=pageNum + 1%>);">></a>
+                        <a href="#" onclick="pagination('/articleList.jsp',<%=pageNum + 1%>);">></a>
                         <%
                         } else {
                         %>
-                        <a href="#" onclick="javascript:pagination('/articleList.jsp',<%=pageCount%>);">></a>
+                        <a href="#" onclick="pagination('/articleList.jsp',<%=pageCount%>);">></a>
                         <%
                             }
                         %>
-                        <a href="#" onclick="javascript:pagination('/articleList.jsp',<%=pageCount%>);">>></a>
+                        <a href="#" onclick="pagination('/articleList.jsp',<%=pageCount%>);">>></a>
                         <%
                             } // last
                         %>
