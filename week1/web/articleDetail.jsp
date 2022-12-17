@@ -25,46 +25,73 @@
 
 <html>
 <head>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="templates/css/articleDetail.css">
     <title>Title</title>
 </head>
 <body>
-    <div class="articleDetail">
+<div class="container-fluid p-5">
+    <div class="articleDetail w-80 p-5">
         <div class="articleHeader">
-            <div class="writer">
-                <%=article.getWriter()%>
+            <div class="writer w-60">
+                <p class="date w-auto  mt-2"><%=article.getWriter()%></p>
             </div>
-            <div class="dateCreated">
-                등록일시 <%=article.getDateCreated()%>
+            <div class="dateCreated w-20">
+                <p class="date mt-2 w-auto">등록일시</p> <p class="date w-auto ms-2 mt-2 text-center"><%=article.getDateCreated()%></p>
             </div>
-            <div class="lastUpdated">
-                수정일시 <%=article.getLastUpdated()%>
-            </div>
-            <div class="views">
-                조회수: <%=article.getViews()%>
+            <div class="lastUpdated w-20 position-relative">
+                <p class="date mt-2 w-auto">수정일시</p> <p class="date w-auto ms-2 mt-2 text-center"><%=article.getLastUpdated()%></p>
             </div>
         </div>
+        <div class="articleTitle">
+            <div class="category text-wrap">
+                <p class="ms-1 text-break">[<%=article.getArticleCategoryName()%>]</p>
+            </div>
+            <div class="title text-break">
+                <p class="ms-1"><%=article.getTitle()%></p>
+            </div>
+            <div class="views">
+                <p class="ms-1">조회수: <%=article.getViews()%></p>
+            </div>
+        </div>
+
+
         <div class="content">
             <p><%=article.getContent()%></p>
         </div>
-        <div class="fileAttached">
+        <div class="fileAttached mt-2">
             첨부파일
         </div>
-        <div class="comments">
-            <div class="comment">
-                <div class="commentDate">
-                    2022.05.14 16:32
-                </div>
-                <div class="commentContent">
-                    blah blah
-                </div>
+        <div class="comments mt-5 p-1 pb-3">
+            <div class="comment p-2">
+                <div>2022.05.14 16:32</div>
+                <div>blah blah</div>
+            </div>
+            <div class="comment p-2">
+                <div>2022.05.14 16:32</div>
+                <div>blah blah</div>
+            </div>
+            <div class="comment p-2">
+                <div>2022.05.14 16:32</div>
+                <div>blah blah</div>
+            </div>
+            <div class="commentUpload mt-2 ms-2 ">
+                <textarea></textarea>
+                <button type="button" class="commentButton">등록</button>
             </div>
         </div>
-        <div class="articleFooter">
+        <div class="articleFooter mt-2 ">
             <button onclick="backToList();">목록</button>
             <input type="submit" value="수정">
             <input type="submit" value="삭제">
         </div>
     </div>
+
+</div>
+
 
 </body>
 <script>
