@@ -78,6 +78,14 @@
     }
 %>
 
+<%
+    //게시글 비밀번호
+    String articlePassword = article.getPassword();
+    session.setAttribute("articleId",article.getId());
+    System.out.println(session.getAttribute("articleId"));
+
+%>
+
 
 <html>
 <head>
@@ -89,6 +97,21 @@
     <title>Title</title>
 </head>
 <body>
+
+<div class="black-bg">
+    <div class="white-bg">
+            <div class="m-3">
+                <p class="float-start">비밀번호</p>
+                <p class="text-danger float-start">*</p>
+                    <input type="password" id="password" autocomplete="new-password" class="ms-3 w-75 float-start" placeholder=" 비밀번호를 입력해 주세요.">
+            </div>
+            <div style="clear: both" class="d-flex justify-content-center">
+                <button name="modalCancel" class="m-1" onclick="hidePasswordModal()">취소</button>
+                <button class="m-1" onclick="validatePassword()">확인</button>
+            </div>
+    </div>
+</div>
+
 <div class="container-fluid p-5">
     <div class="articleDetail w-80 p-5">
         <div class="articleHeader">
@@ -148,12 +171,13 @@
         </div>
         <div class="articleFooter mt-2 ">
             <button onclick="backToList();">목록</button>
-            <input type="submit" value="수정">
-            <input type="submit" value="삭제">
+            <button id="Modify" onclick="showPasswordModal(this.id)">수정</button>
+            <button id="Delete" onclick="showPasswordModal(this.id)">삭제</button>
         </div>
     </div>
-
 </div>
+
+
 
 
 </body>
@@ -194,6 +218,28 @@
         }
         document.body.appendChild(form);
         form.submit();
+    }
+
+    const showPasswordModal = (buttonId) => {
+        document.querySelector('.black-bg').classList.add('show-modal')
+        document.querySelector('button[name="modalCancel"]').id = buttonId;
+    }
+
+    const hidePasswordModal = () => {
+        document.querySelector('.black-bg').classList.remove('show-modal')
+        document.querySelector('button[name="modalCancel"]').removeAttribute('id');
+
+    }
+
+    const validatePassword = () => {
+        let password = document.querySelector('#password').value;
+        let articlePassword = '<%=articlePassword%>';
+        let action = document.querySelector('button[name="modalCancel"]').id
+        if (password === articlePassword){
+            location.href = 'article' + action + 'Process.jsp'
+        } else {
+            alert('비밀번호가 다릅니다.')
+        }
     }
 </script>
 </html>

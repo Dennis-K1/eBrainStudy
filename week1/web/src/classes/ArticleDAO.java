@@ -174,6 +174,7 @@ public class ArticleDAO {
                 String title = rs.getString("title");
                 String content = rs.getString("content");
                 String writer = rs.getString("writer");
+                String password = rs.getString("password");
                 int views = rs.getInt("views");
                 String  dateCreated = rs.getString("date_created");
                 String  lastUpdated = rs.getString("last_updated");
@@ -186,6 +187,7 @@ public class ArticleDAO {
                 article.setTitle(title);
                 article.setContent(content);
                 article.setWriter(writer);
+                article.setPassword(password);
                 article.setViews(views);
                 article.setDateCreated(dateCreated);
                 article.setLastUpdated(lastUpdated);
@@ -329,6 +331,30 @@ public class ArticleDAO {
             conn.close();
         } catch (SQLException e) {
             System.out.println("upload article error");
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public int deleteArticle(int articleId) {
+        try {
+            conn = DriverManager.getConnection(url,userName,userPassword);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        PreparedStatement pstmt = null;
+        int result = 0;
+        try {
+            query = "delete " +
+                    "from article " +
+                    "where article_id = ?";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, articleId);
+            result = pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("delete article error");
             e.printStackTrace();
         }
         return result;
