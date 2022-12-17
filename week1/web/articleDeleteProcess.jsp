@@ -8,8 +8,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <% request.setCharacterEncoding("utf-8") ;%>
 <%
-    System.out.println(session.getAttribute("articleId"));
     int articleId = (Integer)session.getAttribute("articleId");
+    session.removeAttribute("articleId");
 
     ArticleDAO articleDAO = new ArticleDAO();
     int result = articleDAO.deleteArticle(articleId);
