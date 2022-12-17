@@ -27,16 +27,24 @@
 <html>
 <head>
     <title>Title</title>
+
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="templates/css/articleUpload.css">
 </head>
 <body>
-    <div class="articleUploadForm">
-        <% //  onsubmit 유효성 검증 추가 필요 %>
+    <div class="container-md mt-5 border border-dark ms-0">
         <form name="article" method="post" action="articleUploadProcess.jsp" onsubmit="return validateForm();">
-            <table>
-                <tr>
-                    <td>카테고리 *</td>
-                    <td>
-                        <select name="articleCategory">
+            <table class="w-100 mt-3">
+                <tr class="rowHeight border-bottom border-secondary border-top">
+                    <td class="bg-secondary bg-opacity-50">
+                        <span>카테고리</span>
+                        <span class="text-danger">*</span>
+                    </td>
+                    <td class="p-2">
+                        <select name="articleCategory" class="w-25">
                             <option value="none">카테고리 선택</option>
                             <% for (ArticleCategoryVO articleCategory : articleCategories) {%>
                             <option value="<%=articleCategory.getId()%>"><%=articleCategory.getName()%></option>
@@ -44,47 +52,61 @@
                         </select>
                     </td>
                 </tr>
-                <tr>
-                    <td>작성자 *</td>
-                    <td>
-                        <input type="text" name="writer" autocomplete="username">
+                <tr class="rowHeight p-1 border-bottom border-secondary">
+                    <td class="bg-secondary bg-opacity-50">
+                        <span>작성자</span>
+                        <span class="text-danger">*</span>
+                    </td>
+                    <td class="p-2">
+                        <input type="text" name="writer" autocomplete="username" class="w-25">
                     </td>
                 </tr>
-                <tr>
-                    <td>비밀번호 *</td>
-                    <td>
-                        <input type="password" name="password" autocomplete="new-password" placeholder="비밀번호">
-                        <input type="password" name="passwordValidation" autocomplete="new-password" placeholder="비밀번호 확인">
+                <tr class="rowHeight p-1 border-bottom border-secondary">
+                    <td class="bg-secondary bg-opacity-50">
+                        <span>비밀번호</span>
+                        <span class="text-danger">*</span>
+                    </td>
+                    <td class="p-2">
+                        <input type="password" name="password" autocomplete="new-password" placeholder="비밀번호" class="w-25">
+                        <input type="password" name="passwordValidation" autocomplete="new-password" placeholder="비밀번호 확인" class="w-25">
                     </td>
                 </tr>
-                <tr>
-                    <td>제목 *</td>
-                    <td>
-                        <input type="text" name="title">
+                <tr class="rowHeight p-1 border-bottom border-secondary">
+                    <td class="bg-secondary bg-opacity-50">
+                        <span>제목</span>
+                        <span class="text-danger">*</span>
+                    </td>
+                    <td class="p-2">
+                        <input type="text" name="title" class="w-100">
                     </td>
                 </tr>
-                <tr>
-                    <td>내용 *</td>
-                    <td>
-                        <textarea name="content"></textarea>
+                <tr class="rowHeight p-1 border-bottom border-secondary">
+                    <td class="bg-secondary bg-opacity-50">
+                        <span>내용</span>
+                        <span class="text-danger">*</span>
+                    </td>
+                    <td class="p-2">
+                        <textarea name="content" class="w-100"></textarea>
                     </td>
                 </tr>
-                <tr>
-                    <td>파일첨부</td>
-                    <td>
+                <tr class="rowHeight p-1 border-bottom border-secondary">
+                    <td class="bg-secondary bg-opacity-50">
+                        <span>파일첨부</span>
+                    </td>
+                    <td class="p-2">
                         <div class="filePreview">
                             <p>                               </p>
                         </div>
                         <button>파일 찾기</button>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <button>취소</button>
-                        <button type="submit">저장</button>
-                    </td>
-                </tr>
             </table>
+            <div class="mt-5">
+                <td>
+                    <button>취소</button>
+                    <button type="submit">저장</button>
+                </td>
+            </div>
         </form>
     </div>
 

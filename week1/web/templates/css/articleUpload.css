@@ -1,0 +1,18 @@
+.rowHeight{
+    height: 50px;
+}
+
+.smallInput{
+
+}
+.mediumInput{
+
+}
+.largeInput{
+
+}
+
+textarea{
+    resize: none;
+    height: 200px;
+}
