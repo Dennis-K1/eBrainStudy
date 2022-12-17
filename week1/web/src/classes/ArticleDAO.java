@@ -26,9 +26,10 @@ public class ArticleDAO {
         ResultSet rs = null;
         List<ArticleVO> articlesList = new ArrayList<>();
         try {
-            query = "select article_category.name, article.* from " +
-                    "article_category right outer join article " +
+            query = "select article_category.name, article.* " +
+                    "from article_category right outer join article " +
                     "on article.article_category_id = article_category.article_category_id " +
+                    "WHERE article_deleted = 0 " +
                     "order by article.article_id desc " +
                     "limit ? " +
                     "offset ?";
@@ -95,6 +96,7 @@ public class ArticleDAO {
                     "    (? < date_created  and (? + INTERVAL 1 DAY) > date_created)" +
                     "    and article_category.name LIKE ?" +
                     "    and (title LIKE ? or writer LIKE ? or content like ?)" +
+                    "    and article.article_deleted = 0 " +
                     "order by article.article_id desc " +
                     "limit ? " +
                     "offset ?";
@@ -244,7 +246,9 @@ public class ArticleDAO {
         ResultSet rs = null;
         int numberOfArticles = 0;
         try {
-            query = "select COUNT(*) cnt from article";
+            query = "select COUNT(*) cnt " +
+                    "from article " +
+                    "where article_deleted = 0";
             pstmt = conn.prepareStatement(query);
             rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -284,7 +288,8 @@ public class ArticleDAO {
                     "where" +
                     "    (? < date_created  and (? + INTERVAL 1 DAY) > date_created)" +
                     "    and article_category.name LIKE ?" +
-                    "    and (title LIKE ? or writer LIKE ? or content like ?)";
+                    "    and (title LIKE ? or writer LIKE ? or content like ?) " +
+                    "    and article_deleted = 0";
             pstmt = conn.prepareStatement(query);
             pstmt.setString(1, queryStrings.get("fromDate"));
             pstmt.setString(2, queryStrings.get("toDate"));
@@ -345,8 +350,8 @@ public class ArticleDAO {
         PreparedStatement pstmt = null;
         int result = 0;
         try {
-            query = "delete " +
-                    "from article " +
+            query = "UPDATE article " +
+                    "SET article_deleted = 1 " +
                     "where article_id = ?";
             pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, articleId);
