@@ -82,7 +82,6 @@
     //게시글 비밀번호
     String articlePassword = article.getPassword();
     session.setAttribute("articleId",article.getId());
-    System.out.println(session.getAttribute("articleId"));
 
 %>
 
