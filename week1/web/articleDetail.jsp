@@ -21,6 +21,14 @@
     ArticleVO article = articleDAO.getArticle(articleId);
 %>
 
+<%
+    // 뒤로가기 시 검색값 유지를 위한 세팅
+    request.setAttribute("fromDate",request.getAttribute("fromDate"));
+    request.setAttribute("toDate",request.getAttribute("toDate"));
+    request.setAttribute("category",request.getAttribute("category"));
+    request.setAttribute("query",request.getAttribute("query"));
+%>
+
 
 
 <html>
@@ -79,8 +87,11 @@
                 <div>blah blah</div>
             </div>
             <div class="commentUpload mt-2 ms-2 ">
-                <textarea></textarea>
-                <button type="button" class="commentButton">등록</button>
+                <form name="comment" method="post" action="commentUploadAProcess.jsp" onsubmit="return validateComment()">
+                    <textarea name="content"></textarea>
+                    <input type="hidden" name="articleId" value="<%=article.getId()%>">
+                    <button type="submit" class="commentButton">등록</button>
+                </form>
             </div>
         </div>
         <div class="articleFooter mt-2 ">
@@ -96,6 +107,19 @@
 </body>
 <script>
 
+    const validateComment = () => {
+        let comment = document.forms['comment'];
+        let content = comment['content'];
+
+        console.log(content);
+
+        if (content.value == "" || content.value.length > 500) {
+            alert("댓글은 1글자 이상 500글자 미만으로 작성해주세요.")
+            comment.focus();
+            return false
+        }
+
+    }
     const backToList = () => {
         let form = document.createElement("form");
         let parm = new Array();
