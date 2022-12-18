@@ -84,6 +84,10 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
     <title>Title</title>
 </head>
 <style>
@@ -94,33 +98,33 @@
     a:hover, a:active { text-decoration: none; }
 </style>
 <body>
-<div class="board">
-    <div class="searchBar">
+<div class="container-md mt-5 border border-dark ms-5">
+    <div class="searchBar mt-3">
         <!--검색바-->
-        <form action="articleList.jsp" method="post">
+        <form action="articleList.jsp" method="post" class="w-100 border border-dark p-3 h-auto">
             등록일
-            <input type="date" name="fromDate" id="fromDate" onchange="dateLimit(this.id);" value="<%=request.getAttribute("fromDate")%>">
+            <input type="date" name="fromDate" style="width:10%" id="fromDate" onchange="dateLimit(this.id);" value="<%=request.getAttribute("fromDate")%>">
             ~
-            <input type="date" name="toDate" id="toDate" onchange="dateLimit(this.id);" value="<%=request.getAttribute("toDate")%>">
-            <select  name="category">
+            <input type="date" name="toDate" style="width:10%" id="toDate" onchange="dateLimit(this.id);" value="<%=request.getAttribute("toDate")%>">
+            <select  name="category" style="width:10%" class="ms-3">
                 <option value="%">전체 카테고리</option>
                 <% for (ArticleCategoryVO articleCategory : articleCategories) {%>
                 <option value="<%=articleCategory.getName()%>"><%=articleCategory.getName()%></option>
                 <%}%>
             </select>
-            <input type="text" name="query" placeholder="검색어를 입력해 주세요. (제목 + 작성자 + 내용)">
+            <input type="text" name="query" style="width:35%" placeholder="검색어를 입력해 주세요. (제목 + 작성자 + 내용)">
             <input type="submit" value="검색">
         </form>
     </div>
     <div class="articleList">
         <div class="articleListHeader">
 
-            <h5>총<%=numberOfArticles%>건</h5>
+            <span class="fs-6">총<%=numberOfArticles%>건</span>
         </div>
         <div class="articleListMain">
 
-            <table border="1">
-                <tr>
+            <table class="w-100 mt-3 text-center">
+                <tr class="border-bottom border-secondary border-top" style="height:40px">
                     <td>카테고리</td>
                     <td>제목</td>
                     <td>작성자</td>
@@ -129,9 +133,9 @@
                     <td>수정 일시</td>
                 </tr>
                 <% for (ArticleVO article : articles) {%>
-                <tr>
+                <tr class="border-bottom border-secondary" style="height:40px">
                     <td><%=article.getArticleCategoryName()%></td>
-                    <td><a href="#" onclick="articleDetail('/articleDetail.jsp',<%=article.getId()%>,<%=pageNum%>);"><%=article.getTitle()%></a></td>
+                    <td><a class="text-decoration-underline" href="#" onclick="articleDetail('/articleDetail.jsp',<%=article.getId()%>,<%=pageNum%>);"><%=article.getTitle()%></a></td>
                     <td><%=article.getWriter()%></td>
                     <td><%=article.getViews()%></td>
                     <td><%=article.getDateCreated()%></td>
