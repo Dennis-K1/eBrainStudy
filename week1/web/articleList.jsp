@@ -99,9 +99,9 @@
         <!--검색바-->
         <form action="articleList.jsp" method="post">
             등록일
-            <input type="date" name="fromDate" value="<%=request.getAttribute("fromDate")%>">
+            <input type="date" name="fromDate" id="fromDate" onchange="dateLimit(this.id);" value="<%=request.getAttribute("fromDate")%>">
             ~
-            <input type="date" name="toDate" value="<%=request.getAttribute("toDate")%>">
+            <input type="date" name="toDate" id="toDate" onchange="dateLimit(this.id);" value="<%=request.getAttribute("toDate")%>">
             <select  name="category">
                 <option value="%">전체 카테고리</option>
                 <% for (ArticleCategoryVO articleCategory : articleCategories) {%>
@@ -210,6 +210,17 @@
 </body>
 
 <script>
+    //달력 날짜 제한
+    const dateLimit = (dateId) => {
+        let fromDate = document.querySelector('#fromDate');
+        let toDate = document.querySelector('#toDate');
+
+        if (dateId == 'fromDate') {
+            toDate.min = fromDate.value;
+        } else if (dateId == 'toDate') {
+            fromDate.max = toDate.value;
+        }
+    }
 
     //카테고리의 옵션값과 세션의 옵션값이 일치하면 selected 추가
     let category = '<%=request.getAttribute("category")%>';
