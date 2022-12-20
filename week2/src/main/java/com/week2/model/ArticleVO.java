@@ -1,11 +1,13 @@
 package com.week2.model;
 
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ArticleVO {
     /**
      * article_category_id --> category_id ??
@@ -81,10 +83,20 @@ public class ArticleVO {
     private int articleDeleted;
 
 
-    /**
-     * 기본 생성자
+    /***
+     * 롬복 빌더를 위한 필수값  (NoArgsConstructor와 충돌 방지)
+     * @param categoryId 게시글 카테고리 번호
+     * @param title 게시글 제목
+     * @param content 게시글 내용
+     * @param writer 게시글 작성자
+     * @param password 게시블 비밀번호
      */
-    public ArticleVO() {
-
+    @Builder
+    public ArticleVO(int categoryId, String title, String content, String writer, String password){
+        this.categoryId = categoryId;
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
+        this.password = password;
     }
 }
