@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.article">
+    
+    <resultMap id="article_vo" type="com.week2.model.ArticleVO">
+          <result property="id" column="article_id" />
+          <result property="categoryId" column="article_category_id" />
+          <result property="title" column="title" />
+          <result property="content" column="content" />
+          <result property="views" column="views" />
+          <result property="writer" column="writer" />
+          <result property="password" column="password" />
+          <result property="dateCreated" column="date_created" />
+          <result property="lastUpdated" column="last_updated" />
+          <result property="fileAttached" column="file_attached" />
+          <result property="articleDeleted" column="article_deleted" />
+    </resultMap>
+
+    <insert id="insertArticle" parameterType="com.week2.model.ArticleVO">
+        INSERT INTO article
+            (article_category_id, title, content, writer, password) VALUES (
+                                    #{categoryId},
+                                    #{title},
+                                    #{content},
+                                    #{writer},
+                                    #{password}
+                                   )
+    </insert>
+
+    <!-- 파라미터 2개이상일경우 객체로받아야댐... -->
+    <select id="getAllArticles" resultType="ArticleVO">
+        select content from article where article_id = 3
+    </select>
+
+
+
+<!--    <select id="selectBookList" resultType="Book">-->
+<!--        select * from books order by id-->
+<!--    </select>-->
+
+<!--    <insert id="insertBook" parameterType="Book">-->
+<!--        insert into books (bookid, bookname, author, genre) value(#{bookid},#{bookname},#{author},#{genre})-->
+<!--    </insert>-->
+
+<!--    <update id="updateBook" parameterType="Book">-->
+<!--        update books set-->
+<!--                         name = #{bookname},-->
+<!--                         gender= #{author},-->
+<!--                         city = #{genre}-->
+<!--        where bookid = #{bookid};-->
+<!--    </update>-->
+
+<!--    <delete id="deleteBook" parameterType="integer">-->
+<!--        delete from books where id=#{value}-->
+<!--    </delete>-->
+
+
+</mapper>
