@@ -6,6 +6,10 @@
 
     <typeAliases>
         <typeAlias alias="ArticleVO" type="com.week2.model.ArticleVO"/>
+        <typeAlias alias="CategoryVO" type="com.week2.model.CategoryVO"/>
+        <typeAlias alias="CommentVO" type="com.week2.model.CommentVO"/>
+        <typeAlias alias="FileVO" type="com.week2.model.FileVO"/>
+        <typeAlias alias="SearchVO" type="com.week2.model.SearchVO"/>
     </typeAliases>
 
     <environments default="development">
@@ -22,6 +26,8 @@
 
     <mappers>
         <mapper resource="mapper/article.xml" />
+        <mapper resource="mapper/category.xml" />
+        <mapper resource="mapper/comment.xml" />
     </mappers>
 
 </configuration>

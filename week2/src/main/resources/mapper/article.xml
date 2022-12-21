@@ -3,6 +3,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mapper.article">
+
+    <resultMap id="category_vo" type="CategoryVO">
+          <result property="id" column="article_category_id" />
+          <result property="name" column="name" />
+    </resultMap>
     
     <resultMap id="article_vo" type="ArticleVO">
           <result property="id" column="article_id" />
@@ -16,57 +21,90 @@
           <result property="lastUpdated" column="last_updated" />
           <result property="fileAttached" column="file_attached" />
           <result property="articleDeleted" column="article_deleted" />
+          <collection property="categoryVO" resultMap="category_vo" />
     </resultMap>
+
+  <!--selectArticles--> <!--countArticles-->
+  <select id="selectArticles" resultMap="article_vo" parameterType="SearchVO">
+    SELECT article_category.name, article.*
+    FROM article
+        LEFT JOIN article_category
+        ON article.article_category_id = article_category.article_category_id
+    WHERE article.article_deleted = 0
+        <trim prefix="and" prefixOverrides="and|or">
+            <if test="searchParameters.startDate != null">
+            <![CDATA[
+              #{searchParameters.startDate} < article.date_created
+            ]]>
+            </if>
+            <if test="searchParameters.endDate != null">
+            <![CDATA[
+              and #{searchParameters.endDate} + INTERVAL 1 DAY > article.date_created
+            ]]>
+            </if>
+            <if test="searchParameters.keyword != null">
+              <bind name="keyword" value="'%' + searchParameters.keyword + '%'" />
+              and article.title LIKE #{keyword}
+            </if>
+            <if test="searchParameters.category != null">
+              and article_category.article_category_id LIKE #{searchParameters.category}
+            </if>
+        </trim>
+        ORDER BY article.article_id DESC
+        <if test="pageSize != null">
+        LIMIT #{pageSize}
+        </if>
+        <if test="currentPage != null">
+        OFFSET #{currentPage}
+        </if>
+  </select>
 
   <!--insertArticle-->
   <insert id="insertArticle" parameterType="ArticleVO">
-        INSERT INTO article
-            (article_category_id, title, content, writer, password) VALUES (
-                                    #{categoryId},
-                                    #{title},
-                                    #{content},
-                                    #{writer},
-                                    #{password}
-                                   )
+        INSERT INTO
+            article (article_category_id, title, content, writer, password)
+        VALUES (
+            #{categoryId},
+            #{title},
+            #{content},
+            #{writer},
+            #{password} )
     </insert>
-
 
   <!--deleteArticle
       삭제 : article_deleted = 1, 미삭제 : article_deleted = 0 (default)-->
   <delete id="deleteArticle" parameterType="integer">
     <![CDATA[
-      UPDATE article
-      SET article_deleted = 1
-      WHERE article_id = #{value}
+      UPDATE
+          article
+      SET
+          article_deleted = 1
+      WHERE
+          article_id = #{value}
     ]]>
   </delete>
 
-  <!-- 파라미터 2개이상일경우 객체로받아야댐... -->
-  <select id="getAllArticles" resultType="ArticleVO">
-      select content from article where article_id = 3
-  </select>
-
-
-  <!--selectArticles-->
-
-
   <!--selectArticle-->
   <select id="selectArticle" resultType="ArticleVO" parameterType="integer">
-    select * from article where article_id = #{value}
+    SELECT
+        *
+    FROM
+        article
+    WHERE
+        article_id = #{value}
   </select>
-  <!--selectArticleCategories-->
-
-  <!--countArticles-->
-
 
   <!--updateArticle-->
   <update id="updateArticle" parameterType="ArticleVO">
     <![CDATA[
-    UPDATE article
-    SET title = #{title},
+    UPDATE
+        article
+    SET
+        title = #{title},
         content = #{content},
         writer = #{writer}
-    WHERE article_id = #{id}
+    WHERE
+        article_id = #{id}
     ]]>
   </update>
 
