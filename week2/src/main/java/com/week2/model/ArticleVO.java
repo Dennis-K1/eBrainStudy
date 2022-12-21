@@ -90,8 +90,8 @@ public class ArticleVO {
 
 
     /***
-     * 게시글 등록시 Builder (categoryId, title, content, writer, password)
-     * 게시글 수정시 Builder (id, title, content, writer)
+     * 게시글 등록 (insertArticle) : categoryId, title, content, writer, password
+     * 게시글 수정 (updateArticle) : id, title, content, writer
      * (NoArgsConstructor와 충돌 방지를 위해 생성자에 Builder 지정)
      * @param categoryId 게시글 카테고리 번호
      * @param title 게시글 제목
