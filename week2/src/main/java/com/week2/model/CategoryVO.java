@@ -1,5 +1,8 @@
 package com.week2.model;
 
+import lombok.Getter;
+
+@Getter
 public class CategoryVO {
 /*
     id   `article_category_id` INT(10) NOT NULL AUTO_INCREMENT  - 카테고리 번호
@@ -14,6 +17,6 @@ public class CategoryVO {
     /**
      * 카테고리 이름
      */
-    private int name;
+    private String name;
 
 }
