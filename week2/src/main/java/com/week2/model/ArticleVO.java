@@ -24,6 +24,7 @@ public class ArticleVO {
 	lastUpdated       `last_updated` DATETIME NULL DEFAULT NULL                     - 게시글 수정 일시
 	fileAttached      `file_attached` TINYINT(1) NOT NULL DEFAULT '0'               - 게시글 파일 첨부 여부
 	articleDeleted    `article_deleted` TINYINT(1) NULL DEFAULT '0'                 - 게시글 삭제 여부
+	categoryVO        'article_category'  table                                     - 게시글 카테고리 테이블
 */
 
 
@@ -82,9 +83,16 @@ public class ArticleVO {
      */
     private int articleDeleted;
 
+    /**
+     * 게시글 카테고리 테이블 객체
+     */
+    private CategoryVO categoryVO;
+
 
     /***
-     * 롬복 빌더를 위한 필수값  (NoArgsConstructor와 충돌 방지)
+     * 게시글 등록시 Builder (categoryId, title, content, writer, password)
+     * 게시글 수정시 Builder (id, title, content, writer)
+     * (NoArgsConstructor와 충돌 방지를 위해 생성자에 Builder 지정)
      * @param categoryId 게시글 카테고리 번호
      * @param title 게시글 제목
      * @param content 게시글 내용
@@ -92,27 +100,12 @@ public class ArticleVO {
      * @param password 게시블 비밀번호
      */
     @Builder
-    public ArticleVO(int categoryId, String title, String content, String writer, String password){
+    public ArticleVO(int id, int categoryId, String title, String content, String writer, String password){
+        this.id = id;
         this.categoryId = categoryId;
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.password = password;
-    }
-
-
-    /**
-     * 게시물 수정을 위한 생성자
-     * @param id 대상 게시물 번호
-     * @param title 대상 게시물 수정 제목 (변경 전과 같을 수 있음)
-     * @param content 대상 게시물 수정 내용 (변경 전과 같을 수 있음)
-     * @param writer 대상 게시물 수정 작성자 (변경 전과 같을 수 있음)
-     */
-    @Builder
-    public ArticleVO(int id, String title, String content, String writer){
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.writer = writer;
     }
 }
