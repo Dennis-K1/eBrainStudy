@@ -99,4 +99,20 @@ public class ArticleVO {
         this.writer = writer;
         this.password = password;
     }
+
+
+    /**
+     * 게시물 수정을 위한 생성자
+     * @param id 대상 게시물 번호
+     * @param title 대상 게시물 수정 제목 (변경 전과 같을 수 있음)
+     * @param content 대상 게시물 수정 내용 (변경 전과 같을 수 있음)
+     * @param writer 대상 게시물 수정 작성자 (변경 전과 같을 수 있음)
+     */
+    @Builder
+    public ArticleVO(int id, String title, String content, String writer){
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
+    }
 }

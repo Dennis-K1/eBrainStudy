@@ -4,7 +4,7 @@
 
 <mapper namespace="mapper.article">
     
-    <resultMap id="article_vo" type="com.week2.model.ArticleVO">
+    <resultMap id="article_vo" type="ArticleVO">
           <result property="id" column="article_id" />
           <result property="categoryId" column="article_category_id" />
           <result property="title" column="title" />
@@ -18,7 +18,8 @@
           <result property="articleDeleted" column="article_deleted" />
     </resultMap>
 
-    <insert id="insertArticle" parameterType="com.week2.model.ArticleVO">
+  <!--insertArticle-->
+  <insert id="insertArticle" parameterType="ArticleVO">
         INSERT INTO article
             (article_category_id, title, content, writer, password) VALUES (
                                     #{categoryId},
@@ -29,32 +30,44 @@
                                    )
     </insert>
 
-    <!-- 파라미터 2개이상일경우 객체로받아야댐... -->
-    <select id="getAllArticles" resultType="ArticleVO">
-        select content from article where article_id = 3
-    </select>
+
+  <!--deleteArticle
+      삭제 : article_deleted = 1, 미삭제 : article_deleted = 0 (default)-->
+  <delete id="deleteArticle" parameterType="integer">
+    <![CDATA[
+      UPDATE article
+      SET article_deleted = 1
+      WHERE article_id = #{value}
+    ]]>
+  </delete>
+
+  <!-- 파라미터 2개이상일경우 객체로받아야댐... -->
+  <select id="getAllArticles" resultType="ArticleVO">
+      select content from article where article_id = 3
+  </select>
 
 
+  <!--selectArticles-->
 
-<!--    <select id="selectBookList" resultType="Book">-->
-<!--        select * from books order by id-->
-<!--    </select>-->
 
-<!--    <insert id="insertBook" parameterType="Book">-->
-<!--        insert into books (bookid, bookname, author, genre) value(#{bookid},#{bookname},#{author},#{genre})-->
-<!--    </insert>-->
+  <!--selectArticle-->
+  <select id="selectArticle" resultType="ArticleVO" parameterType="integer">
+    select * from article where article_id = #{value}
+  </select>
+  <!--selectArticleCategories-->
 
-<!--    <update id="updateBook" parameterType="Book">-->
-<!--        update books set-->
-<!--                         name = #{bookname},-->
-<!--                         gender= #{author},-->
-<!--                         city = #{genre}-->
-<!--        where bookid = #{bookid};-->
-<!--    </update>-->
+  <!--countArticles-->
 
-<!--    <delete id="deleteBook" parameterType="integer">-->
-<!--        delete from books where id=#{value}-->
-<!--    </delete>-->
 
+  <!--updateArticle-->
+  <update id="updateArticle" parameterType="ArticleVO">
+    <![CDATA[
+    UPDATE article
+    SET title = #{title},
+        content = #{content},
+        writer = #{writer}
+    WHERE article_id = #{id}
+    ]]>
+  </update>
 
 </mapper>
