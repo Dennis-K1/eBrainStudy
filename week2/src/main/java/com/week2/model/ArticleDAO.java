@@ -1,7 +1,6 @@
 package com.week2.model;
 
-import java.util.HashMap;
-import java.util.SimpleTimeZone;
+import java.util.List;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -23,12 +22,20 @@ public class ArticleDAO {
 	public ArticleDAO() {
 	}
 
-	public ArticleVO selectArticle(int articleId) {
-		SqlSessionFactory sqlSessionFactory;
-		SqlSession session = null;
-		InputStream inputStream;
-		ArticleVO article = null;
 
+	/**
+	 * 특정 게시글 한 개 조회
+	 * @param articleId 대상 게시글 번호
+	 * @return 게시글 VO
+	 */
+	public ArticleVO selectArticle(int articleId) {
+		/**
+		 * SqlSessionFactory / InputStream 선언 or Not?
+		 */
+		SqlSessionFactory sqlSessionFactory;
+		InputStream inputStream;
+		SqlSession session = null;
+		ArticleVO article = null;
 		try {
 			inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
@@ -42,13 +49,49 @@ public class ArticleDAO {
 		return article;
 	}
 
+	/**
+	 * 검색 조건 및 페이지 상태 기반 다수 게시글 조회 (조건 없을 시 전체 게시글 반환)
+	 * @param searchVO 다수의 검색 조건 (HashMap)과 페이지 상태가 기록된 VO
+	 * @return 결과 게시글 VO이 담긴 List
+	 */
+	public List selectArticles(SearchVO searchVO) {
+		SqlSessionFactory sqlSessionFactory;
+		InputStream inputStream;
+		SqlSession session = null;
+		List<ArticleVO> articleList = null;
+		try {
+			inputStream = Resources.getResourceAsStream(resource);
+			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			session = sqlSessionFactory.openSession();
+			articleList = session.selectList("mapper.article.selectArticles",searchVO);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return articleList;
+	}
+
+	/**
+	 * 검색 조건 기반 총 게시글 갯수 조회 (조건 없을 시 전체 갯수 반환)
+	 * @param searchVO 페이지 상태를 제외한 검색 조건
+	 * @return 게시글 수
+	 */
+	public int countArticles(SearchVO searchVO) {
+		List articleList = selectArticles(searchVO);
+		return articleList.size();
+	}
+
+	/**
+	 * 게시글 등록
+	 * @param article 등록할 게시글 VO
+	 * @return 등록 결과 ( 성공 : 1, 실패 : 0)
+	 */
 	public int insertArticle(ArticleVO article){
 		int result = 0;
-
 		SqlSessionFactory sqlSessionFactory;
-		SqlSession session = null;
 		InputStream inputStream;
-
+		SqlSession session = null;
 		try {
 			inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
@@ -63,13 +106,16 @@ public class ArticleDAO {
 		return result;
 	}
 
+	/**
+	 * 특정 게시글 삭제
+	 * @param articleId 삭제 대상 게시글 번호
+	 * @return 삭제 결과 ( 성공 : 1, 실패 : 0)
+	 */
 	public int deleteArticle(int articleId){
 		int result = 0;
-
 		SqlSessionFactory sqlSessionFactory;
-		SqlSession session = null;
 		InputStream inputStream;
-
+		SqlSession session = null;
 		try {
 			inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
@@ -84,13 +130,16 @@ public class ArticleDAO {
 		return result;
 	}
 
+	/**
+	 * 특정 게시글 수정
+	 * @param article 수정 대상 게시글 (수정 내용 있을 시 반영된 VO)
+	 * @return 수정 결과 ( 성공 : 1, 실패 : 0)
+	 */
 	public int updateArticle(ArticleVO article){
 		int result = 0;
-
 		SqlSessionFactory sqlSessionFactory;
-		SqlSession session = null;
 		InputStream inputStream;
-
+		SqlSession session = null;
 		try {
 			inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
@@ -105,7 +154,4 @@ public class ArticleDAO {
 		return result;
 	}
 
-	public int test01() {
-		return 1;
-	}
 }
