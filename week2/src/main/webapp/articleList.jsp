@@ -42,7 +42,7 @@
 <div class="container-md mt-5 border border-dark ms-5">
     <div class="searchBar mt-3">
         <!--검색바-->
-        <form action="control" method="get" class="w-100 border border-dark p-3 h-auto">
+        <form action="articleList" method="get" class="w-100 border border-dark p-3 h-auto">
             등록일
             <input type="date" name="startDate" style="width:10%" id="startDate" onchange="dateLimit(this.id);" value="<%=startDate%>">
             ~
@@ -76,7 +76,7 @@
                 <% for (ArticleVO article : articleList) {%>
                 <tr class="border-bottom border-secondary" style="height:40px">
                     <td><%=article.getCategoryVO().getName()%></td>
-                    <td><a class="text-decoration-underline" href="#" onclick="articleDetail('/articleDetail.jsp',<%=article.getId()%>,<%=pageNumber%>);"><%=article.getTitle()%></a></td>
+                    <td><a class="text-decoration-underline" href="/articleDetail?articleId=<%=article.getId()%>"><%=article.getTitle()%></a></td>
                     <td><%=article.getWriter()%></td>
                     <td><%=article.getViews()%></td>
                     <td><%=article.getDateCreated()%></td>
@@ -100,15 +100,15 @@
                                         endPage = pageCount;
                                     }
                             %>
-                            <a href="#" onclick="pagination('/control',<%=1%>);"><<</a>
+                            <a href="#" onclick="pagination('/articleList',<%=1%>);"><<</a>
                             <%
                                 if(pageNumber > 1) {
                             %>
-                            <a href="#" onclick="pagination('/control',<%=pageNumber - 1%>);"><</a>
+                            <a href="#" onclick="pagination('/articleList',<%=pageNumber - 1%>);"><</a>
                             <%
                             } else {
                             %>
-                            <a href="#" onclick="pagination('/control',<%=1%>);"><</a>
+                            <a href="#" onclick="pagination('/articleList',<%=1%>);"><</a>
                             <%
                                 }
                             %>
@@ -120,7 +120,7 @@
                             <%
                             } else { // 현재 페이지가 아닌 경우 링크 설정
                             %>
-                            <a href="#" onclick="pagination('/control',<%=i%>);"><%=i%></a>
+                            <a href="#" onclick="pagination('/articleList',<%=i%>);"><%=i%></a>
                             <%
                                     }
                                 } // for end
@@ -128,15 +128,15 @@
                             <%
                                 if(pageNumber != pageCount) {
                             %>
-                            <a href="#" onclick="pagination('/control',<%=pageNumber + 1%>);">></a>
+                            <a href="#" onclick="pagination('/articleList',<%=pageNumber + 1%>);">></a>
                             <%
                             } else {
                             %>
-                            <a href="#" onclick="pagination('/control',<%=pageCount%>);">></a>
+                            <a href="#" onclick="pagination('/articleList',<%=pageCount%>);">></a>
                             <%
                                 }
                             %>
-                            <a href="#" onclick="pagination('/control',<%=pageCount%>);">>></a>
+                            <a href="#" onclick="pagination('/articleList',<%=pageCount%>);">>></a>
                             <%
                                 } // last
                             %>
@@ -146,7 +146,7 @@
             </table>
         </div>
         <div class="articleListFooter">
-            <button onclick="location.href = '/articleUploadForm.jsp';">등록</button>
+            <button onclick="location.href = '/articleInput';">등록</button>
         </div>
     </div>
 </div>
