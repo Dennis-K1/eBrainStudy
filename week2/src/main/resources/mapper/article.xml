@@ -26,7 +26,7 @@
 
   <!--selectArticles-->
   <select id="selectArticles" resultMap="article_vo" parameterType="SearchVO">
-    SELECT article_category.name, article.*
+    SELECT article_category.name, article.article_id, article.title, article.content, article.views, article.writer, article.date_created, IFNULL(article.last_updated,'-') AS last_updated
     FROM article
         LEFT JOIN article_category
         ON article.article_category_id = article_category.article_category_id
