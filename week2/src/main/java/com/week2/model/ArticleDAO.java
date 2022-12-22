@@ -74,12 +74,25 @@ public class ArticleDAO {
 
 	/**
 	 * 검색 조건 기반 총 게시글 갯수 조회 (조건 없을 시 전체 갯수 반환)
-	 * @param searchVO 페이지 상태를 제외한 검색 조건
+	 * @param searchVO 검색 조건 (검색값 없을 경우 자동 제외 처리)
 	 * @return 게시글 수
 	 */
 	public int countArticles(SearchVO searchVO) {
-		List articleList = selectArticles(searchVO);
-		return articleList.size();
+		int numberOfArticles = 0;
+		SqlSessionFactory sqlSessionFactory;
+		InputStream inputStream;
+		SqlSession session = null;
+		try {
+			inputStream = Resources.getResourceAsStream(resource);
+			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			session = sqlSessionFactory.openSession();
+			numberOfArticles = session.selectOne("mapper.article.countArticles", searchVO);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return numberOfArticles;
 	}
 
 	/**

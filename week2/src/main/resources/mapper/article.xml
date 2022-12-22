@@ -24,7 +24,7 @@
           <collection property="categoryVO" resultMap="category_vo" />
     </resultMap>
 
-  <!--selectArticles--> <!--countArticles-->
+  <!--selectArticles-->
   <select id="selectArticles" resultMap="article_vo" parameterType="SearchVO">
     SELECT article_category.name, article.*
     FROM article
@@ -54,9 +54,37 @@
         <if test="pageSize != null">
         LIMIT #{pageSize}
         </if>
-        <if test="currentPage != null">
-        OFFSET #{currentPage}
+        <if test="firstArticleIndex != null">
+        OFFSET #{firstArticleIndex}
         </if>
+  </select>
+
+  <!--countArticles-->
+  <select id="countArticles" resultType="integer" parameterType="SearchVO">
+    SELECT COUNT(*)
+    FROM article
+    LEFT JOIN article_category
+    ON article.article_category_id = article_category.article_category_id
+    WHERE article.article_deleted = 0
+    <trim prefix="and" prefixOverrides="and|or">
+      <if test="searchParameters.startDate != null">
+        <![CDATA[
+              #{searchParameters.startDate} < article.date_created
+            ]]>
+      </if>
+      <if test="searchParameters.endDate != null">
+        <![CDATA[
+              and #{searchParameters.endDate} + INTERVAL 1 DAY > article.date_created
+            ]]>
+      </if>
+      <if test="searchParameters.keyword != null">
+        <bind name="keyword" value="'%' + searchParameters.keyword + '%'" />
+        and article.title LIKE #{keyword}
+      </if>
+      <if test="searchParameters.category != null">
+        and article_category.article_category_id LIKE #{searchParameters.category}
+      </if>
+    </trim>
   </select>
 
   <!--insertArticle-->
