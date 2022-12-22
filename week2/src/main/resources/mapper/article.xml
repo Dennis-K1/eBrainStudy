@@ -59,6 +59,15 @@
         </if>
   </select>
 
+  <!--selectArticle-->
+  <select id="selectArticle" resultMap="article_vo" parameterType="integer">
+    SELECT article_category.name, article.article_id, article.password, article.title, article.content, article.views, article.writer, article.date_created, IFNULL(article.last_updated,'-') AS last_updated
+    FROM article
+           LEFT JOIN article_category
+                     ON article.article_category_id = article_category.article_category_id
+    WHERE article_id = #{value}
+  </select>
+
   <!--countArticles-->
   <select id="countArticles" resultType="integer" parameterType="SearchVO">
     SELECT COUNT(*)
@@ -87,6 +96,7 @@
     </trim>
   </select>
 
+
   <!--insertArticle-->
   <insert id="insertArticle" parameterType="ArticleVO">
         INSERT INTO
@@ -101,7 +111,7 @@
 
   <!--deleteArticle
       삭제 : article_deleted = 1, 미삭제 : article_deleted = 0 (default)-->
-  <delete id="deleteArticle" parameterType="integer">
+  <update id="deleteArticle" parameterType="integer">
     <![CDATA[
       UPDATE
           article
@@ -110,17 +120,8 @@
       WHERE
           article_id = #{value}
     ]]>
-  </delete>
+  </update>
 
-  <!--selectArticle-->
-  <select id="selectArticle" resultType="ArticleVO" parameterType="integer">
-    SELECT
-        *
-    FROM
-        article
-    WHERE
-        article_id = #{value}
-  </select>
 
   <!--updateArticle-->
   <update id="updateArticle" parameterType="ArticleVO">
@@ -134,6 +135,13 @@
     WHERE
         article_id = #{id}
     ]]>
+  </update>
+
+  <!--increaseViews-->
+  <update id="increaseViews" parameterType="integer">
+    UPDATE article
+    SET views = views + 1
+    WHERE article_id = #{value}
   </update>
 
 </mapper>
