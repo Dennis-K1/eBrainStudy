@@ -7,7 +7,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 
-@WebServlet("/control")
+@WebServlet("/")
 public class Controller extends HttpServlet {
 
 	protected void processRequest (HttpServletRequest request, HttpServletResponse response)
