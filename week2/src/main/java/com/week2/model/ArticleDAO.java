@@ -40,6 +40,7 @@ public class ArticleDAO {
 			inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 			session = sqlSessionFactory.openSession();
+			increaseViews(session, articleId);
 			article = session.selectOne("mapper.article.selectArticle",articleId);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -133,7 +134,7 @@ public class ArticleDAO {
 			inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 			session = sqlSessionFactory.openSession();
-			result = session.delete("mapper.article.deleteArticle", articleId);
+			result = session.update("mapper.article.deleteArticle", articleId);
 			session.commit();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -165,6 +166,16 @@ public class ArticleDAO {
 			session.close();
 		}
 		return result;
+	}
+
+	/**
+	 * 게시글 조회시 조회수 증가
+	 * @param session selectArticle 에서 열려 있는 session
+	 * @param articleId 조회 대상 게시글 번호
+	 */
+	public void increaseViews (SqlSession session, int articleId) {
+		session.update("mapper.article.increaseViews", articleId);
+		session.commit();
 	}
 
 }
