@@ -3,23 +3,19 @@ package com.week2.model;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import lombok.NoArgsConstructor;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+@NoArgsConstructor
 public class CategoryDAO {
 
 	/**
 	 * MyBatis 설정 파일 경로
 	 */
 	private String resource = "SqlMapConfig.xml";
-
-	/**
-	 * 기본 생성자
-	 */
-	public CategoryDAO() {
-	}
 
 	/**
 	 * 모든 카테고리 조회

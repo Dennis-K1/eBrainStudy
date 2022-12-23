@@ -1,6 +1,7 @@
 package com.week2.model;
 
 import java.util.List;
+import lombok.NoArgsConstructor;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -9,18 +10,13 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 
+@NoArgsConstructor
 public class ArticleDAO {
 
 	/**
 	 * MyBatis 설정 파일 경로
 	 */
 	private String resource = "SqlMapConfig.xml";
-
-	/**
-	 * 기본 생성자
-	 */
-	public ArticleDAO() {
-	}
 
 
 	/**
@@ -79,10 +75,10 @@ public class ArticleDAO {
 	 * @return 게시글 수
 	 */
 	public int countArticles(SearchVO searchVO) {
-		int numberOfArticles = 0;
 		SqlSessionFactory sqlSessionFactory;
 		InputStream inputStream;
 		SqlSession session = null;
+		int numberOfArticles = 0;
 		try {
 			inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
@@ -97,9 +93,9 @@ public class ArticleDAO {
 	}
 
 	/**
-	 * 게시글 등록
+	 * 게시글 등록 (성공시 게시글 번호 반환)
 	 * @param article 등록할 게시글 VO
-	 * @return 등록 결과 ( 성공 : 1, 실패 : 0)
+	 * @return 등록 결과 ( 성공 : 게시글 번호, 실패 : 0)
 	 */
 	public int insertArticle(ArticleVO article){
 		int result = 0;
@@ -111,6 +107,9 @@ public class ArticleDAO {
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 			session = sqlSessionFactory.openSession();
 			result = session.insert("mapper.article.insertArticle", article);
+			if (result == 1) {
+				result = article.getId();
+			}
 			session.commit();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -173,7 +172,7 @@ public class ArticleDAO {
 	 * @param session selectArticle 에서 열려 있는 session
 	 * @param articleId 조회 대상 게시글 번호
 	 */
-	public void increaseViews (SqlSession session, int articleId) {
+	private void increaseViews (SqlSession session, int articleId) {
 		session.update("mapper.article.increaseViews", articleId);
 		session.commit();
 	}
