@@ -107,6 +107,9 @@
             #{content},
             #{writer},
             #{password} )
+        <selectKey keyProperty="id" resultType="integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
     </insert>
 
   <!--deleteArticle
