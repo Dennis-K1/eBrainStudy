@@ -22,7 +22,7 @@
 </head>
 <body>
 <div class="container-md mt-5 border border-dark ms-0">
-    <form name="article" method="post" action="articleInsert" onsubmit="return validateForm();">
+    <form name="article" method="post"  enctype="multipart/form-data" action="articleInsert" onsubmit="return validateForm();">
         <table class="w-100 mt-3">
             <tr class="rowHeight border-bottom border-secondary border-top">
                 <td class="bg-secondary bg-opacity-50">
@@ -77,13 +77,12 @@
             </tr>
             <tr class="rowHeight p-1 border-bottom border-secondary">
                 <td class="bg-secondary bg-opacity-50">
-                    <span>파일첨부</span>
+                    <input type="file" name="fileName">
                 </td>
                 <td class="p-2">
                     <div class="filePreview">
                         <p>                               </p>
                     </div>
-                    <button>파일 찾기</button>
                 </td>
             </tr>
         </table>
