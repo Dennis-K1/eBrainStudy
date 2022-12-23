@@ -28,6 +28,7 @@
         <mapper resource="mapper/article.xml" />
         <mapper resource="mapper/category.xml" />
         <mapper resource="mapper/comment.xml" />
+        <mapper resource="mapper/file.xml" />
     </mappers>
 
 </configuration>
