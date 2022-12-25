@@ -5,7 +5,6 @@ import com.week2.model.ArticleVO;
 import com.week2.model.CategoryDAO;
 import com.week2.model.CategoryVO;
 import com.week2.model.SearchVO;
-import java.awt.PrintGraphics;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -13,15 +12,9 @@ import java.util.Objects;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class SelectArticlesCommand implements Command {
-
-	private HttpServletRequest request;
-	private HttpServletResponse response;
-
-	public String execute() throws ServletException, IOException {
+	public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		ArticleDAO articleDAO = new ArticleDAO();
 		CategoryDAO categoryDAO = new CategoryDAO();

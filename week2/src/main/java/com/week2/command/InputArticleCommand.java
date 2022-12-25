@@ -9,12 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
-public class InputArticleCommand implements Command {
 
-	private HttpServletRequest request;
-	private HttpServletResponse response;
-	public String execute() throws ServletException, IOException {
+public class InputArticleCommand implements Command {
+	public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		CategoryDAO categoryDAO = new CategoryDAO();
 		List<CategoryVO> categoryList = categoryDAO.selectCategories();

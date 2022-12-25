@@ -5,14 +5,9 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class DeleteArticleCommand implements Command {
-
-	private HttpServletRequest request;
-	private HttpServletResponse response;
-	public String execute() throws ServletException, IOException {
+	public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		int result = 0;
 		ArticleDAO articleDAO = new ArticleDAO();
