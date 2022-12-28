@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.article">
+
+  <resultMap id="category_vo" type="CategoryVO">
+    <result property="id" column="article_category_id" />
+    <result property="name" column="name" />
+  </resultMap>
+
+  <resultMap id="article_vo" type="ArticleVO">
+    <result property="id" column="article_id" />
+    <result property="categoryId" column="article_category_id" />
+    <result property="title" column="title" />
+    <result property="content" column="content" />
+    <result property="views" column="views" />
+    <result property="writer" column="writer" />
+    <result property="password" column="password" />
+    <result property="dateCreated" column="date_created" />
+    <result property="lastUpdated" column="last_updated" />
+    <result property="fileAttached" column="file_attached" />
+    <result property="articleDeleted" column="article_deleted" />
+    <collection property="categoryVO" resultMap="category_vo" />
+  </resultMap>
+
+  <!--selectArticles-->
+  <select id="selectArticles" resultMap="article_vo" parameterType="SearchVO">
+    SELECT article_category.name,
+    article.article_id,
+    article.title,
+    article.content, article.views, article.writer, article.date_created, IFNULL(article.last_updated,'-') AS last_updated
+    FROM
+    article
+    LEFT JOIN
+    article_category
+    ON
+    article.article_category_id = article_category.article_category_id
+    WHERE article.article_deleted = 0
+    <trim prefix="and" prefixOverrides="and|or">
+    <if test="searchParameters != null">
+      <if test="searchParameters.startDate != null">
+        <![CDATA[
+              #{searchParameters.startDate} < article.date_created
+            ]]>
+      </if>
+      <if test="searchParameters.endDate != null">
+        <![CDATA[
+              and #{searchParameters.endDate} + INTERVAL 1 DAY > article.date_created
+            ]]>
+      </if>
+      <if test="searchParameters.keyword != null">
+        <bind name="keyword" value="'%' + searchParameters.keyword + '%'" />
+        and article.title LIKE #{keyword}
+      </if>
+      <if test="searchParameters.category != null">
+        and article_category.article_category_id LIKE #{searchParameters.category}
+      </if>
+    </if>
+
+    </trim>
+    ORDER BY article.article_id DESC
+    <if test="pageSize != null">
+      LIMIT #{pageSize}
+    </if>
+    <if test="firstArticleIndex != null">
+      OFFSET #{firstArticleIndex}
+    </if>
+  </select>
+
+  <!--selectArticle-->
+  <select id="selectArticle" resultMap="article_vo" parameterType="integer">
+    SELECT article_category.name, article.article_id, article.password, article.title, article.content, article.views, article.writer, article.date_created, IFNULL(article.last_updated,'-') AS last_updated
+    FROM article
+           LEFT JOIN article_category
+                     ON article.article_category_id = article_category.article_category_id
+    WHERE article_id = #{value}
+  </select>
+
+  <!--countArticles-->
+  <select id="countArticles" resultType="integer" parameterType="SearchVO">
+    SELECT COUNT(*)
+    FROM article
+    LEFT JOIN article_category
+    ON article.article_category_id = article_category.article_category_id
+    WHERE article.article_deleted = 0
+    <trim prefix="and" prefixOverrides="and|or">
+      <if test="searchParameters != null">
+        <if test="searchParameters.startDate != null">
+          <![CDATA[
+              #{searchParameters.startDate} < article.date_created
+            ]]>
+        </if>
+        <if test="searchParameters.endDate != null">
+          <![CDATA[
+              and #{searchParameters.endDate} + INTERVAL 1 DAY > article.date_created
+            ]]>
+        </if>
+        <if test="searchParameters.keyword != null">
+          <bind name="keyword" value="'%' + searchParameters.keyword + '%'" />
+          and article.title LIKE #{keyword}
+        </if>
+        <if test="searchParameters.category != null">
+          and article_category.article_category_id LIKE #{searchParameters.category}
+        </if>
+      </if>
+    </trim>
+  </select>
+
+
+  <!--insertArticle-->
+  <insert id="insertArticle" parameterType="ArticleVO">
+    INSERT INTO
+    article (article_category_id, title, content, writer, password)
+    VALUES (
+    #{categoryId},
+    #{title},
+    #{content},
+    #{writer},
+    #{password} )
+    <selectKey keyProperty="id" resultType="integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
+  <!--deleteArticle
+      삭제 : article_deleted = 1, 미삭제 : article_deleted = 0 (default)-->
+  <update id="deleteArticle" parameterType="integer">
+    <![CDATA[
+    UPDATE
+      article
+    SET
+      article_deleted = 1
+    WHERE
+      article_id = #{value}
+    ]]>
+  </update>
+
+
+  <!--updateArticle-->
+  <update id="updateArticle" parameterType="ArticleVO">
+    <![CDATA[
+    UPDATE
+      article
+    SET
+      title = #{title},
+      content = #{content},
+      writer = #{writer}
+    WHERE
+      article_id = #{id}
+    ]]>
+  </update>
+
+  <!--increaseViews-->
+  <update id="increaseViews" parameterType="integer">
+    UPDATE article
+    SET views = views + 1
+    WHERE article_id = #{value}
+  </update>
+
+</mapper>

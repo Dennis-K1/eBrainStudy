@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.file">
+
+  <resultMap id="file_vo" type="FileVO">
+    <result property="id" column="file_id" />
+    <result property="articleId" column="article_id" />
+    <result property="name" column="name" />
+    <result property="path" column="path" />
+  </resultMap>
+
+  <insert id="insertFile" parameterType="FileVO">
+    INSERT INTO
+      file (article_id, name, path)
+    VALUES (
+             #{articleId},
+             #{name},
+             #{path} )
+  </insert>
+
+
+</mapper>
