@@ -24,6 +24,29 @@
     <collection property="categoryVO" resultMap="category_vo" />
   </resultMap>
 
+
+  <sql id="searchParameters">
+    <trim prefix="and" prefixOverrides="and|or">
+      <if test="startDate != null">
+        <![CDATA[
+              #{startDate} < article.date_created
+            ]]>
+      </if>
+      <if test="endDate != null">
+        <![CDATA[
+              and #{endDate} + INTERVAL 1 DAY > article.date_created
+            ]]>
+      </if>
+      <if test="keyword != null">
+        <bind name="keyword" value="'%' + keyword + '%'" />
+        and article.title LIKE #{keyword}
+      </if>
+      <if test="category != null">
+        and article_category.article_category_id LIKE #{category}
+      </if>
+    </trim>
+  </sql>
+
   <!--selectArticles-->
   <select id="selectArticles" resultMap="article_vo" parameterType="SearchVO">
     SELECT article_category.name,
@@ -37,28 +60,7 @@
     ON
     article.article_category_id = article_category.article_category_id
     WHERE article.article_deleted = 0
-    <trim prefix="and" prefixOverrides="and|or">
-    <if test="searchParameters != null">
-      <if test="searchParameters.startDate != null">
-        <![CDATA[
-              #{searchParameters.startDate} < article.date_created
-            ]]>
-      </if>
-      <if test="searchParameters.endDate != null">
-        <![CDATA[
-              and #{searchParameters.endDate} + INTERVAL 1 DAY > article.date_created
-            ]]>
-      </if>
-      <if test="searchParameters.keyword != null">
-        <bind name="keyword" value="'%' + searchParameters.keyword + '%'" />
-        and article.title LIKE #{keyword}
-      </if>
-      <if test="searchParameters.category != null">
-        and article_category.article_category_id LIKE #{searchParameters.category}
-      </if>
-    </if>
-
-    </trim>
+    <include refid="searchParameters"></include>
     ORDER BY article.article_id DESC
     <if test="pageSize != null">
       LIMIT #{pageSize}
@@ -84,27 +86,7 @@
     LEFT JOIN article_category
     ON article.article_category_id = article_category.article_category_id
     WHERE article.article_deleted = 0
-    <trim prefix="and" prefixOverrides="and|or">
-      <if test="searchParameters != null">
-        <if test="searchParameters.startDate != null">
-          <![CDATA[
-              #{searchParameters.startDate} < article.date_created
-            ]]>
-        </if>
-        <if test="searchParameters.endDate != null">
-          <![CDATA[
-              and #{searchParameters.endDate} + INTERVAL 1 DAY > article.date_created
-            ]]>
-        </if>
-        <if test="searchParameters.keyword != null">
-          <bind name="keyword" value="'%' + searchParameters.keyword + '%'" />
-          and article.title LIKE #{keyword}
-        </if>
-        <if test="searchParameters.category != null">
-          and article_category.article_category_id LIKE #{searchParameters.category}
-        </if>
-      </if>
-    </trim>
+    <include refid="searchParameters"></include>
   </select>
 
 
