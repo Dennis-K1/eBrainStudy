@@ -2,21 +2,21 @@
 <%@ page import="com.week3.vo.ArticleVO" %>
 <%@ page import="com.week3.vo.CategoryVO" %>
 <%@ page import="com.week3.vo.SearchVO" %>
+<%@ page import="com.week3.dto.ArticleListDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<ArticleVO> articleList = (List<ArticleVO>) request.getAttribute("articleList");
-    List<CategoryVO> categoryList = (List<CategoryVO>) request.getAttribute("categoryList");
-	int numberOfArticles = (Integer)request.getAttribute("numberOfArticles");
-	int pageNumber = (Integer)request.getAttribute("pageNumber");
-//	int pageSize = ((SearchVO)request.getAttribute("searchVO")).getPageSize();
-	int pageSize = 10;
-//	int firstArticleIndex = ((SearchVO)request.getAttribute("searchVO")).getFirstArticleIndex();
-	int firstArticleIndex = 1;
-
-	String startDate = request.getParameter("startDate");
-	String endDate = request.getParameter("endDate");
-	String category = request.getParameter("category");
-	String keyword = request.getParameter("keyword");
+    ArticleListDTO articleListDTO = (ArticleListDTO)request.getAttribute("articleListDTO");
+    List<ArticleVO> articleList = articleListDTO.getArticleList();
+    List<CategoryVO> categoryList = articleListDTO.getCategoryList();
+	int numberOfArticles = articleListDTO.getNumberOfArticles();
+	SearchVO searchVO = articleListDTO.getSearchVO();
+	int pageNumber = searchVO.getPageNumber();
+	int pageSize = searchVO.getPageSize();
+	int firstArticleIndex = searchVO.getFirstArticleIndex();
+	String startDate = searchVO.getStartDate();
+	String endDate = searchVO.getEndDate();
+	String category = searchVO.getCategory();
+	String keyword = searchVO.getKeyword();
 %>
 <html>
 <head>

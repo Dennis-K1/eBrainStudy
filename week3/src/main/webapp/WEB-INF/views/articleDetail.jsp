@@ -1,6 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.week3.vo.ArticleVO" %>
-<%@ page import="com.week3.vo.CommentVO" %><%--
+<%@ page import="com.week3.vo.CommentVO" %>
+<%@ page import="com.week3.dto.ArticleDetailDTO" %><%--
   Created by IntelliJ IDEA.
   User: bw120
   Date: 2022-12-22
@@ -9,9 +10,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    int articleId = (Integer)request.getAttribute("articleId");
-    ArticleVO article = (ArticleVO) request.getAttribute("article");
-    List<CommentVO> commentList = (List<CommentVO>)request.getAttribute("commentList");
+    ArticleDetailDTO articleDetailDTO = (ArticleDetailDTO) request.getAttribute("articleDetailDTO");
+    int articleId = articleDetailDTO.getArticleId();
+    ArticleVO article = articleDetailDTO.getArticle();
+    List<CommentVO> commentList = articleDetailDTO.getCommentList();
 %>
 <%
 
