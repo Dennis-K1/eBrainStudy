@@ -25,7 +25,7 @@ public class Week3Application {
 		Resource[] res = new PathMatchingResourcePatternResolver().getResources(
 			"classpath:mapper/*.xml");
 		bean.setMapperLocations(res);
-		bean.setTypeAliasesPackage("com.week3.vo");
+		bean.setTypeAliasesPackage("com.week3.vo, com.week3.dto");
 		return bean.getObject();
 	}
 
