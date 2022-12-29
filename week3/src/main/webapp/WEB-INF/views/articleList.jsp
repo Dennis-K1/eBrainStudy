@@ -5,13 +5,26 @@
 <%@ page import="com.week3.dto.ArticleListDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    /*
+    articleListDTO      - 본 페이지에 필요한 데이터 모음
+    articleList         - 대상 페이지 게시글 목록
+    categoryList        - 검색창 카테고리 옵션 목록
+    numberOfArticles    - 총 검색 게시글 수
+    searchVO            - 유저 검색값 모음
+    pageNumber          - 대상 페이지 번호
+    firstArticleIndex   - 대상 페이지 첫 게시글 인덱스
+    startDate           - 게시글 등록 일시 시작 범위
+    endDate             - 게시글 등록 일시 종료 범위
+    category            - 게시글 카테고리
+    keyword             - 검색 키워드
+     */
     ArticleListDTO articleListDTO = (ArticleListDTO)request.getAttribute("articleListDTO");
     List<ArticleVO> articleList = articleListDTO.getArticleList();
     List<CategoryVO> categoryList = articleListDTO.getCategoryList();
 	int numberOfArticles = articleListDTO.getNumberOfArticles();
 	SearchVO searchVO = articleListDTO.getSearchVO();
 	int pageNumber = searchVO.getPageNumber();
-	int pageSize = searchVO.getPageSize();
+	int pageSize = searchVO.getPAGE_SIZE();
 	int firstArticleIndex = searchVO.getFirstArticleIndex();
 	String startDate = searchVO.getStartDate();
 	String endDate = searchVO.getEndDate();

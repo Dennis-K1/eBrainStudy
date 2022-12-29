@@ -62,8 +62,8 @@
     WHERE article.article_deleted = 0
     <include refid="searchParameters"></include>
     ORDER BY article.article_id DESC
-    <if test="pageSize != null">
-      LIMIT #{pageSize}
+    <if test="PAGE_SIZE != null">
+      LIMIT #{PAGE_SIZE}
     </if>
     <if test="firstArticleIndex != null">
       OFFSET #{firstArticleIndex}

@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class BoardController {
 
-	private final ArticleListService articleListService;
-	private final ArticleDetailService articleDetailService;
-	private final ArticleInsertService articleInsertService;
-	private final ArticleUpdateService articleUpdateService;
-	private final ArticleDeleteService articleDeleteService;
-	private final CommentInsertService commentInsertService;
+	private final ArticleListService ARTICLE_LIST_SERVICE;
+	private final ArticleDetailService ARTICLE_DETAIL_SERVICE;
+//	private final ArticleInsertService articleInsertService;
+//	private final ArticleUpdateService articleUpdateService;
+//	private final ArticleDeleteService articleDeleteService;
+//	private final CommentInsertService commentInsertService;
 
 
 	@GetMapping("/test")
@@ -36,41 +36,41 @@ public class BoardController {
 
 	@GetMapping("/articleList")
 	public String articleList(SearchVO searchVO, Model model) {
-		model.addAttribute("articleListDTO", articleListService.selectAllArticles(searchVO));
+		model.addAttribute("articleListDTO", ARTICLE_LIST_SERVICE.articleListService(searchVO));
 		return "articleList";
 	}
 
 
 	@GetMapping("/articleDetail")
 	public String articleDetail(@RequestParam("articleId") int articleId, Model model) {
-		model.addAttribute("articleDetailDTO", articleDetailService.selectArticle(articleId));
+		model.addAttribute("articleDetailDTO", ARTICLE_DETAIL_SERVICE.selectArticle(articleId));
 		return "articleDetail";
 	}
 
-	@GetMapping("articleInput")
-	public String (, Model model) {
-
-		return "articleInput";
-	}
-
-	@GetMapping("")
-	public String (, Model model) {
-		return "";
-	}
-
-	@GetMapping("")
-	public String (, Model model) {
-		return "";
-	}
-
-	@GetMapping("")
-	public String (, Model model) {
-		return "";
-	}
-
-	@GetMapping("")
-	public String (, Model model) {
-		return "";
-	}
+//	@GetMapping("articleInput")
+//	public String (, Model model) {
+//
+//		return "articleInput";
+//	}
+//
+//	@GetMapping("")
+//	public String (, Model model) {
+//		return "";
+//	}
+//
+//	@GetMapping("")
+//	public String (, Model model) {
+//		return "";
+//	}
+//
+//	@GetMapping("")
+//	public String (, Model model) {
+//		return "";
+//	}
+//
+//	@GetMapping("")
+//	public String (, Model model) {
+//		return "";
+//	}
 
 }
