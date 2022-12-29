@@ -36,14 +36,14 @@ public class BoardController {
 
 	@GetMapping("/articleList")
 	public String articleList(SearchVO searchVO, Model model) {
-		model.addAttribute("articleListDTO", ARTICLE_LIST_SERVICE.articleListService(searchVO));
+		model.addAttribute("articleListDTO", ARTICLE_LIST_SERVICE.service(searchVO));
 		return "articleList";
 	}
 
 
 	@GetMapping("/articleDetail")
 	public String articleDetail(@RequestParam("articleId") int articleId, Model model) {
-		model.addAttribute("articleDetailDTO", ARTICLE_DETAIL_SERVICE.selectArticle(articleId));
+		model.addAttribute("articleDetailDTO", ARTICLE_DETAIL_SERVICE.service(articleId));
 		return "articleDetail";
 	}
 

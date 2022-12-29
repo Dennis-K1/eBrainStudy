@@ -58,7 +58,7 @@ public class ArticleDAO {
 		return SQL_SESSION.update("mapper.article.updateArticle", article);
 	}
 
-	private void increaseViews ( int articleId) {
+	public void increaseViews ( int articleId) {
 		SQL_SESSION.update("mapper.article.increaseViews", articleId);
 
 	}

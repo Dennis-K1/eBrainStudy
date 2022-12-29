@@ -1,23 +1,26 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.week3.vo.ArticleVO" %>
 <%@ page import="com.week3.vo.CommentVO" %>
-<%@ page import="com.week3.dto.ArticleDetailDTO" %><%--
+<%@ page import="com.week3.dto.ArticleDetailDTO" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%--
   Created by IntelliJ IDEA.
   User: bw120
   Date: 2022-12-22
   Time: 오후 10:32
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    /*
+    articleDetailDTO    - 본 페이지에 필요한 데이터 모음
+    article             - 본 페이지 게시글 객체
+    articleId           - 본 페이지 게시글 번호
+    commentList         - 본 페이지 게시글 댓글 목록
+     */
     ArticleDetailDTO articleDetailDTO = (ArticleDetailDTO) request.getAttribute("articleDetailDTO");
-    int articleId = articleDetailDTO.getArticleId();
     ArticleVO article = articleDetailDTO.getArticle();
+    int articleId = article.getId();
     List<CommentVO> commentList = articleDetailDTO.getCommentList();
-%>
-<%
-
-
 %>
 
 <html>

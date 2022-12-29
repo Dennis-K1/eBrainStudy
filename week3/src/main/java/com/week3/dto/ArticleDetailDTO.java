@@ -15,11 +15,6 @@ import lombok.Getter;
 public class ArticleDetailDTO {
 
 	/**
-	 * 대상 게시글 번호
-	 */
-	private int articleId;
-
-	/**
 	 * 대상 게시글 객체
 	 */
 	private ArticleVO article;
