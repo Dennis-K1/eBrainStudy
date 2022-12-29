@@ -157,7 +157,7 @@
             </table>
         </div>
         <div class="articleListFooter">
-            <button onclick="location.href = '/articleInput';">등록</button>
+            <button onclick="location.href='/articleInput';">등록</button>
         </div>
     </div>
 </div>

@@ -18,7 +18,7 @@
     commentList         - 본 페이지 게시글 댓글 목록
      */
     ArticleDetailDTO articleDetailDTO = (ArticleDetailDTO) request.getAttribute("articleDetailDTO");
-    ArticleVO article = articleDetailDTO.getArticle();
+    ArticleVO article = articleDetailDTO.getArticleVO();
     int articleId = article.getId();
     List<CommentVO> commentList = articleDetailDTO.getCommentList();
 %>
@@ -94,7 +94,7 @@
                 }
             %>
             <div class="commentUpload mt-2 ms-2 ">
-                <form name="comment" method="post" action="insertComment" onsubmit="return validateComment()">
+                <form name="commentVO" method="post" action="commentInsert" onsubmit="return validateComment()">
                     <textarea name="content" placeholder=" 댓글을 입력해 주세요."></textarea>
                     <input type="hidden" name="articleId" value="<%=article.getId()%>">
                     <button type="submit" class="commentButton">등록</button>
