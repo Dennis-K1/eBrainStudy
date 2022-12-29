@@ -9,7 +9,7 @@ import lombok.Getter;
  */
 @Getter
 @Builder
-public class ArticleInputDTO {
+public class ArticleUpdateDTO {
 
 	/**
 	 * 등록 대상 게시글 객체
