@@ -18,6 +18,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ArticleListService{
+	/*
+	final 변수명 UPPER_CASE?
+	service / repository 동일 기능 분리?
+	DTO 생성 분리?
+	참조 변수 선언후 대입 or 메소드 바로 대입
+	 */
 
 	/**
 	 * ARTICLE_DAO		- 게시글 테이블 접근을 위한 @Repository
@@ -31,7 +37,7 @@ public class ArticleListService{
 	 * @param searchVO 유저 검색값 객체
 	 * @return ArticleListDTO (데이터 모음 객체)
 	 */
-	public ArticleListDTO articleListService(SearchVO searchVO) {
+	public ArticleListDTO service(SearchVO searchVO) {
 		SearchVO validatedSearchVO = validateSearchParameters(searchVO);
 		return createDTO(validatedSearchVO);
 	}
@@ -43,9 +49,9 @@ public class ArticleListService{
 	 */
 	private ArticleListDTO createDTO(SearchVO validatedSearchVO) {
 		ArticleListDTO articleListDTO = ArticleListDTO.builder()
-			.articleList(selectAllArticles(validatedSearchVO))
-			.numberOfArticles(countArticles(validatedSearchVO))
-			.categoryList(selectCategories())
+			.articleList(getArticleList(validatedSearchVO))
+			.numberOfArticles(getNumberOfArticles(validatedSearchVO))
+			.categoryList(getCategoryList())
 			.searchVO(validatedSearchVO)
 			.build();
 		return articleListDTO;
@@ -56,7 +62,7 @@ public class ArticleListService{
 	 * @param validatedSearchVO 유효성 검증한 유저 검색값 객체
 	 * @return 검색 대상 게시글 목록
 	 */
-	private List<ArticleVO> selectAllArticles(SearchVO validatedSearchVO) {
+	private List<ArticleVO> getArticleList(SearchVO validatedSearchVO) {
 		return ARTICLE_DAO.selectAllArticles(validatedSearchVO);
 	}
 
@@ -65,7 +71,7 @@ public class ArticleListService{
 	 * @param validatedSearchVO 유효성 검증한 유저 검색값 객체
 	 * @return 검색 대상 게시글 수
 	 */
-	private int countArticles(SearchVO validatedSearchVO) {
+	private int getNumberOfArticles(SearchVO validatedSearchVO) {
 		return ARTICLE_DAO.countArticles(validatedSearchVO);
 	}
 
@@ -73,12 +79,12 @@ public class ArticleListService{
 	 * 검색창 카테고리 옵션 목록 반환
 	 * @return 검색창 카테고리 옵션 목록
 	 */
-	private List<CategoryVO> selectCategories() {
+	private List<CategoryVO> getCategoryList() {
 		return CATEGORY_DAO.selectCategories();
 	}
 
 	/**
-	 * 유저 검색값 유효성 검증하여 반환
+	 * 유저 검색값 유효성 검증 및 정정하여 반환
 	 * @param searchVO 유저 검색값 객체
 	 * @return 유효성 검증 후 수정된 검색값 객체
 	 */
