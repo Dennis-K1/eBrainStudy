@@ -42,7 +42,7 @@ public class ArticleDetailService {
 	 */
 	public ArticleDetailDTO createDTO(int articleId) {
 		ArticleDetailDTO articleDetailDTO = ArticleDetailDTO.builder()
-			.article(getArticle(articleId))
+			.articleVO(getArticle(articleId))
 			.commentList(getCommentList(articleId))
 			.build();
 		return articleDetailDTO;
@@ -63,6 +63,6 @@ public class ArticleDetailService {
 	 * @return 대상 게시글 댓글 목록
 	 */
 	public List<CommentVO> getCommentList(int articleId) {
-		return COMMENT_DAO.selectComments(articleId);
+		return COMMENT_DAO.selectAllComments(articleId);
 	}
 }

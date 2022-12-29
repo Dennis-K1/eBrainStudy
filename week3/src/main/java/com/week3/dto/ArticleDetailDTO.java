@@ -17,7 +17,7 @@ public class ArticleDetailDTO {
 	/**
 	 * 대상 게시글 객체
 	 */
-	private ArticleVO article;
+	private ArticleVO articleVO;
 
 	/**
 	 * 대상 게시글 댓글 목록

@@ -100,16 +100,16 @@ public class ArticleListService{
 	 * @param searchDTO 유저 검색값 객체
 	 */
 	private void validateEmptySearchValues(SearchDTO searchDTO) {
-		if (Validate.isStringEmpty(searchDTO.getStartDate())) {
+		if (Validate.isEmpty(searchDTO.getStartDate())) {
 			searchDTO.setStartDate(null);
 		}
-		if (Validate.isStringEmpty(searchDTO.getEndDate())) {
+		if (Validate.isEmpty(searchDTO.getEndDate())) {
 			searchDTO.setEndDate(null);
 		}
-		if (Validate.isIntegerEmpty(searchDTO.getCategoryId())) {
+		if (Validate.isEmpty(searchDTO.getCategoryId())) {
 			searchDTO.setCategoryId(null);
 		}
-		if (Validate.isStringEmpty(searchDTO.getKeyword())) {
+		if (Validate.isEmpty(searchDTO.getKeyword())) {
 			searchDTO.setKeyword(null);
 		}
 	}

@@ -12,11 +12,11 @@ public class CommentDAO {
 	@Autowired
 	SqlSession sqlSession;
 
-	public List selectComments(int articleId) {
+	public List selectAllComments(int articleId) {
 		return sqlSession.selectList("mapper.comment.selectComments", articleId);
 	}
 
-	public int insertComment(CommentVO comment){
-		return sqlSession.insert("mapper.comment.insertComment", comment);
+	public int insertComment(CommentVO commentVO){
+		return sqlSession.insert("mapper.comment.insertComment", commentVO);
 	}
 }

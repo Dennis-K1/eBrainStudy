@@ -46,16 +46,16 @@ public class ArticleDAO {
 		return SQL_SESSION.selectOne("mapper.article.countArticles", validatedSearchDTO);
 	}
 
-	public int insertArticle(ArticleVO article){
-		return SQL_SESSION.insert("mapper.article.insertArticle", article);
+	public int insertArticle(ArticleVO articleVO){
+		return SQL_SESSION.insert("mapper.article.insertArticle", articleVO);
 	}
 
 	public int deleteArticle(int articleId){
 		return SQL_SESSION.update("mapper.article.deleteArticle", articleId);
 	}
 
-	public int updateArticle(ArticleVO article){
-		return SQL_SESSION.update("mapper.article.updateArticle", article);
+	public int updateArticle(ArticleVO articleVO){
+		return SQL_SESSION.update("mapper.article.updateArticle", articleVO);
 	}
 
 	public void increaseViews ( int articleId) {

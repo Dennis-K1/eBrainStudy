@@ -16,12 +16,12 @@ public class CommentVO {
     /**
      * 댓글 번호
      */
-    private int id;  // id or commentId??
+    private Integer id;  // id or commentId??
 
     /**
      * 댓글이 등록된 게시글 번호
      */
-    private int articleId;
+    private Integer articleId;
 
     /**
      * 댓글 내용

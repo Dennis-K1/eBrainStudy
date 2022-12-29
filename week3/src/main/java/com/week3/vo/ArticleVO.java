@@ -4,10 +4,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class ArticleVO {
     /**
      * article_category_id --> category_id ??
@@ -93,7 +95,7 @@ public class ArticleVO {
      * 게시글 등록 (insertArticle) : categoryId, title, content, writer, password
      * 게시글 수정 (updateArticle) : id, title, content, writer
      * (NoArgsConstructor와 충돌 방지를 위해 생성자에 Builder 지정)
-     * @param categoryId 게시글 카테고리 번호
+//     * @param categoryId 게시글 카테고리 번호
      * @param title 게시글 제목
      * @param content 게시글 내용
      * @param writer 게시글 작성자
@@ -102,7 +104,8 @@ public class ArticleVO {
     @Builder
     public ArticleVO(int id, int categoryId, String title, String content, String writer, String password){
         this.id = id;
-        //vo
+//        //vo
+//        this.categoryVO = categoryVO;
         this.categoryId = categoryId;
         this.title = title;
         this.content = content;
