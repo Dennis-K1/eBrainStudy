@@ -12,9 +12,14 @@ import lombok.Getter;
 public class ArticleUpdateDTO {
 
 	/**
+	 * 등록 대상 게시글 번호
+	 */
+	private Integer articleId;
+
+	/**
 	 * 등록 대상 게시글 객체
 	 */
-	private int categoryId;
+	private Integer categoryId;
 
 	/**
 	 * 게시글 작성자
