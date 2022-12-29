@@ -1,7 +1,7 @@
 package com.week3.dao;
 
 import com.week3.vo.ArticleVO;
-import com.week3.vo.SearchVO;
+import com.week3.dto.SearchDTO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
@@ -30,20 +30,20 @@ public class ArticleDAO {
 
 	/**
 	 * 검색 대상 게시물 목록 조회
-	 * @param validatedSearchVO 유효성 검증한 유저 검색값 객체
+	 * @param validatedSearchDTO 유효성 검증한 유저 검색값 객체
 	 * @return 게시글 목록
 	 */
-	public List selectAllArticles(SearchVO validatedSearchVO) {
-		return SQL_SESSION.selectList("mapper.article.selectArticles",validatedSearchVO);
+	public List selectAllArticles(SearchDTO validatedSearchDTO) {
+		return SQL_SESSION.selectList("mapper.article.selectArticles", validatedSearchDTO);
 	}
 
 	/**
 	 * 검색 대상 총 게시물 수 조회
-	 * @param validatedSearchVO 유효성 검증한 유저 검색값 객체
+	 * @param validatedSearchDTO 유효성 검증한 유저 검색값 객체
 	 * @return 검색 대상 게시글 수
 	 */
-	public int countArticles(SearchVO validatedSearchVO) {
-		return SQL_SESSION.selectOne("mapper.article.countArticles", validatedSearchVO);
+	public int countArticles(SearchDTO validatedSearchDTO) {
+		return SQL_SESSION.selectOne("mapper.article.countArticles", validatedSearchDTO);
 	}
 
 	public int insertArticle(ArticleVO article){

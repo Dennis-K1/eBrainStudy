@@ -6,7 +6,7 @@ import com.week3.dto.ArticleListDTO;
 import com.week3.support.Validate;
 import com.week3.vo.ArticleVO;
 import com.week3.vo.CategoryVO;
-import com.week3.vo.SearchVO;
+import com.week3.dto.SearchDTO;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -34,45 +34,45 @@ public class ArticleListService{
 
 	/**
 	 * 유저 검색값 유효성 검증 후, ArticleList 페이지에 필요한 데이터 모음 생성 및 반환
-	 * @param searchVO 유저 검색값 객체
+	 * @param searchDTO 유저 검색값 객체
 	 * @return ArticleListDTO (데이터 모음 객체)
 	 */
-	public ArticleListDTO service(SearchVO searchVO) {
-		SearchVO validatedSearchVO = validateSearchParameters(searchVO);
-		return createDTO(validatedSearchVO);
+	public ArticleListDTO service(SearchDTO searchDTO) {
+		SearchDTO validatedSearchDTO = validateSearchParameters(searchDTO);
+		return createDTO(validatedSearchDTO);
 	}
 
 	/**
 	 * 필요 데이터 생성 후 ArticleListDTO 객체에 통합
-	 * @param validatedSearchVO 유효성 검증한 유저 검색값 객체
+	 * @param validatedSearchDTO 유효성 검증한 유저 검색값 객체
 	 * @return ArticleListDTO (데이터 모음 객체)
 	 */
-	private ArticleListDTO createDTO(SearchVO validatedSearchVO) {
+	private ArticleListDTO createDTO(SearchDTO validatedSearchDTO) {
 		ArticleListDTO articleListDTO = ArticleListDTO.builder()
-			.articleList(getArticleList(validatedSearchVO))
-			.numberOfArticles(getNumberOfArticles(validatedSearchVO))
+			.articleList(getArticleList(validatedSearchDTO))
+			.numberOfArticles(getNumberOfArticles(validatedSearchDTO))
 			.categoryList(getCategoryList())
-			.searchVO(validatedSearchVO)
+			.searchDTO(validatedSearchDTO)
 			.build();
 		return articleListDTO;
 	}
 
 	/**
 	 * 검색 대상 게시글 목록 반환
-	 * @param validatedSearchVO 유효성 검증한 유저 검색값 객체
+	 * @param validatedSearchDTO 유효성 검증한 유저 검색값 객체
 	 * @return 검색 대상 게시글 목록
 	 */
-	private List<ArticleVO> getArticleList(SearchVO validatedSearchVO) {
-		return ARTICLE_DAO.selectAllArticles(validatedSearchVO);
+	private List<ArticleVO> getArticleList(SearchDTO validatedSearchDTO) {
+		return ARTICLE_DAO.selectAllArticles(validatedSearchDTO);
 	}
 
 	/**
 	 * 검색 대상 총 게시글 수 반환
-	 * @param validatedSearchVO 유효성 검증한 유저 검색값 객체
+	 * @param validatedSearchDTO 유효성 검증한 유저 검색값 객체
 	 * @return 검색 대상 게시글 수
 	 */
-	private int getNumberOfArticles(SearchVO validatedSearchVO) {
-		return ARTICLE_DAO.countArticles(validatedSearchVO);
+	private int getNumberOfArticles(SearchDTO validatedSearchDTO) {
+		return ARTICLE_DAO.countArticles(validatedSearchDTO);
 	}
 
 	/**
@@ -85,46 +85,46 @@ public class ArticleListService{
 
 	/**
 	 * 유저 검색값 유효성 검증 및 정정하여 반환
-	 * @param searchVO 유저 검색값 객체
+	 * @param searchDTO 유저 검색값 객체
 	 * @return 유효성 검증 후 수정된 검색값 객체
 	 */
-	private SearchVO validateSearchParameters(SearchVO searchVO) {
-		validateEmptyPageNumber(searchVO);
-		searchVO.setFirstArticleIndex(searchVO.getPageNumber());
-		validateEmptySearchValues(searchVO);
-		return searchVO;
+	private SearchDTO validateSearchParameters(SearchDTO searchDTO) {
+		validateEmptyPageNumber(searchDTO);
+		searchDTO.setFirstArticleIndex(searchDTO.getPageNumber());
+		validateEmptySearchValues(searchDTO);
+		return searchDTO;
 	}
 
 	/**
 	 * 검색 옵션값 (startDate, endDate, Category, keyword) 유효성 검증 및 수정
-	 * @param searchVO 유저 검색값 객체
+	 * @param searchDTO 유저 검색값 객체
 	 */
-	private void validateEmptySearchValues(SearchVO searchVO) {
-		if (Validate.isStringEmpty(searchVO.getStartDate())) {
-			searchVO.setStartDate(null);
+	private void validateEmptySearchValues(SearchDTO searchDTO) {
+		if (Validate.isStringEmpty(searchDTO.getStartDate())) {
+			searchDTO.setStartDate(null);
 		}
-		if (Validate.isStringEmpty(searchVO.getEndDate())) {
-			searchVO.setEndDate(null);
+		if (Validate.isStringEmpty(searchDTO.getEndDate())) {
+			searchDTO.setEndDate(null);
 		}
-		if (Validate.isStringEmpty(searchVO.getCategory())) {
-			searchVO.setCategory(null);
+		if (Validate.isIntegerEmpty(searchDTO.getCategoryId())) {
+			searchDTO.setCategoryId(null);
 		}
-		if (Validate.isStringEmpty(searchVO.getKeyword())) {
-			searchVO.setKeyword(null);
+		if (Validate.isStringEmpty(searchDTO.getKeyword())) {
+			searchDTO.setKeyword(null);
 		}
 	}
 
 	/**
 	 * 검색 페이지 번호 유효성 검증 및 수정
-	 * @param searchVO 유저 검색값 객체
+	 * @param searchDTO 유저 검색값 객체
 	 */
-	private void validateEmptyPageNumber(SearchVO searchVO) {
+	private void validateEmptyPageNumber(SearchDTO searchDTO) {
 		int pageNumber = 1;
-		Integer searchedPageNumber = searchVO.getPageNumber();
+		Integer searchedPageNumber = searchDTO.getPageNumber();
 		if (!Objects.equals(searchedPageNumber, null)) {
 			pageNumber = searchedPageNumber;
 		}
-		searchVO.setPageNumber(pageNumber);
+		searchDTO.setPageNumber(pageNumber);
 	}
 }
 

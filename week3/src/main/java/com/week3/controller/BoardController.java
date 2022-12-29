@@ -2,8 +2,7 @@ package com.week3.controller;
 
 import com.week3.service.ArticleDetailService;
 import com.week3.service.ArticleListService;
-import com.week3.vo.SearchVO;
-import lombok.Getter;
+import com.week3.dto.SearchDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,10 +22,10 @@ public class BoardController {
 
 
 	@GetMapping("/test")
-	public String home(SearchVO searchVO) {
-		System.out.println(searchVO.getKeyword());
-		System.out.println(searchVO.toString());
-		return searchVO.toString();
+	public String home(SearchDTO searchDTO) {
+		System.out.println(searchDTO.getKeyword());
+		System.out.println(searchDTO.toString());
+		return searchDTO.toString();
 	}
 
 	@GetMapping("/")
@@ -35,8 +34,8 @@ public class BoardController {
 	}
 
 	@GetMapping("/articleList")
-	public String articleList(SearchVO searchVO, Model model) {
-		model.addAttribute("articleListDTO", ARTICLE_LIST_SERVICE.service(searchVO));
+	public String articleList(SearchDTO searchDTO, Model model) {
+		model.addAttribute("articleListDTO", ARTICLE_LIST_SERVICE.service(searchDTO));
 		return "articleList";
 	}
 

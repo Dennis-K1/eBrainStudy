@@ -2,7 +2,6 @@ package com.week3.dto;
 
 import com.week3.vo.ArticleVO;
 import com.week3.vo.CategoryVO;
-import com.week3.vo.SearchVO;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +31,6 @@ public class ArticleListDTO {
 	/**
 	 * 유저 검색 값 모음
 	 */
-	private SearchVO searchVO;
+	private SearchDTO searchDTO;
 
 }

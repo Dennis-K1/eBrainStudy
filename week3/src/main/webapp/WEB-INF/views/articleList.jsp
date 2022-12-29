@@ -1,8 +1,9 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.week3.vo.ArticleVO" %>
 <%@ page import="com.week3.vo.CategoryVO" %>
-<%@ page import="com.week3.vo.SearchVO" %>
+<%@ page import="com.week3.dto.SearchDTO" %>
 <%@ page import="com.week3.dto.ArticleListDTO" %>
+<%@ page import="com.week3.dto.SearchDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     /*
@@ -10,7 +11,7 @@
     articleList         - 대상 페이지 게시글 목록
     categoryList        - 검색창 카테고리 옵션 목록
     numberOfArticles    - 총 검색 게시글 수
-    searchVO            - 유저 검색값 모음
+    searchDTO            - 유저 검색값 모음
     pageNumber          - 대상 페이지 번호
     firstArticleIndex   - 대상 페이지 첫 게시글 인덱스
     startDate           - 게시글 등록 일시 시작 범위
@@ -22,15 +23,16 @@
     List<ArticleVO> articleList = articleListDTO.getArticleList();
     List<CategoryVO> categoryList = articleListDTO.getCategoryList();
 	int numberOfArticles = articleListDTO.getNumberOfArticles();
-	SearchVO searchVO = articleListDTO.getSearchVO();
-	int pageNumber = searchVO.getPageNumber();
-	int pageSize = searchVO.getPAGE_SIZE();
-	int firstArticleIndex = searchVO.getFirstArticleIndex();
-	String startDate = searchVO.getStartDate();
-	String endDate = searchVO.getEndDate();
-	String category = searchVO.getCategory();
-	String keyword = searchVO.getKeyword();
+	SearchDTO searchDTO = articleListDTO.getSearchDTO();
+	int pageNumber = searchDTO.getPageNumber();
+	int pageSize = searchDTO.getPAGE_SIZE();
+	int firstArticleIndex = searchDTO.getFirstArticleIndex();
+	String startDate = searchDTO.getStartDate();
+	String endDate = searchDTO.getEndDate();
+	Integer categoryId = searchDTO.getCategoryId();
+	String keyword = searchDTO.getKeyword();
 %>
+<html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -56,7 +58,7 @@
             <input type="date" name="startDate" style="width:10%" id="startDate" onchange="dateLimit(this.id);" value="<%=startDate%>">
             ~
             <input type="date" name="endDate" style="width:10%" id="endDate" onchange="dateLimit(this.id);" value="<%=endDate%>">
-            <select  name="category" style="width:10%" class="ms-3">
+            <select  name="categoryId" style="width:10%" class="ms-3">
                 <option value="%">전체 카테고리</option>
                 <% for (CategoryVO articleCategory : categoryList) {%>
                 <option value="<%=articleCategory.getId()%>"><%=articleCategory.getName()%></option>
@@ -167,7 +169,7 @@
 
   let startDate = '<%=startDate%>'
   let endDate = '<%=endDate%>'
-  let category = '<%=category%>';
+  let categoryId = '<%=categoryId%>';
   let keyword = '<%=keyword%>';
   //달력 날짜 제한
   const dateLimit = (dateId) => {
@@ -183,11 +185,11 @@
 
   //카테고리의 옵션값과 세션의 옵션값이 일치하면 selected 추가
 
-  let categoryOptions = document.querySelectorAll('[name=category]')[0];
+  let categoryOptions = document.querySelectorAll('[name=categoryId]')[0];
 
   for (let i=0; i<categoryOptions.length; i++) {
     let value = categoryOptions.options[i].value;
-    if (value == category) {
+    if (value == categoryId) {
       categoryOptions.options[i].setAttribute('selected',true)
     }
   }
@@ -219,8 +221,8 @@
     if (endDate !== 'null') {
         parm.push( ['endDate', '<%=request.getParameter("endDate")%>'] );
     }
-    if (category !== 'null') {
-        parm.push( ['category', '<%=request.getParameter("category")%>'] );
+    if (categoryId !== 'null') {
+        parm.push( ['categoryId', '<%=request.getParameter("categoryId")%>'] );
     }
     if (keyword !== 'null') {
         parm.push( ['keyword', '<%=request.getParameter("keyword")%>'] );
@@ -249,7 +251,7 @@
 
     parm.push( ['startDate', '<%=request.getAttribute("startDate")%>'] );
     parm.push( ['endDate', '<%=request.getAttribute("endDate")%>'] );
-    parm.push( ['category', '<%=request.getAttribute("category")%>'] );
+    parm.push( ['categoryId', '<%=request.getAttribute("categoryId")%>'] );
     parm.push( ['keyword', '<%=request.getAttribute("keyword")%>'] );
 
     for (let i = 0; i < parm.length; i++) {

@@ -41,14 +41,14 @@
         <bind name="keyword" value="'%' + keyword + '%'" />
         and article.title LIKE #{keyword}
       </if>
-      <if test="category != null">
-        and article_category.article_category_id LIKE #{category}
+      <if test="categoryId != null">
+        and article_category.article_category_id LIKE #{categoryId}
       </if>
     </trim>
   </sql>
 
   <!--selectArticles-->
-  <select id="selectArticles" resultMap="article_vo" parameterType="SearchVO">
+  <select id="selectArticles" resultMap="article_vo" parameterType="SearchDTO">
     SELECT article_category.name,
     article.article_id,
     article.title,
@@ -80,7 +80,7 @@
   </select>
 
   <!--countArticles-->
-  <select id="countArticles" resultType="integer" parameterType="SearchVO">
+  <select id="countArticles" resultType="integer" parameterType="SearchDTO">
     SELECT COUNT(*)
     FROM article
     LEFT JOIN article_category
