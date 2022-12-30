@@ -78,6 +78,7 @@
             <table class="w-100 mt-3 text-center">
                 <tr class="border-bottom border-secondary border-top" style="height:40px">
                     <td>카테고리</td>
+                    <td>   </td>
                     <td>제목</td>
                     <td>작성자</td>
                     <td>조회수</td>
@@ -87,6 +88,17 @@
                 <% for (ArticleVO article : articleList) {%>
                 <tr class="border-bottom border-secondary" style="height:40px">
                     <td><%=article.getCategoryVO().getName()%></td>
+                    <%
+                        if (article.getFileAttached() == 1) {
+                    %>
+                    <td><img src="static/image/fileClip.png" style="width: 20px; height: 20px"></td>
+                    <%
+                        } else {
+                    %>
+                    <td></td>
+                    <%
+						}
+                    %>
                     <td><a class="text-decoration-underline" href="/articleDetail?articleId=<%=article.getId()%>"><%=article.getTitle()%></a></td>
                     <td><%=article.getWriter()%></td>
                     <td><%=article.getViews()%></td>

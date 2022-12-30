@@ -24,5 +24,11 @@
              #{extension} )
   </insert>
 
+  <!--countArticles-->
+  <select id="countArticleFiles" resultType="integer" parameterType="integer">
+    SELECT COUNT(*)
+    FROM file
+    WHERE article_id = #{value}
+  </select>
 
 </mapper>

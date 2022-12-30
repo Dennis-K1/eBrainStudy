@@ -7,6 +7,7 @@ import com.week3.service.ArticleInsertService;
 import com.week3.service.ArticleListService;
 import com.week3.dto.SearchDTO;
 import com.week3.service.ArticleUpdateService;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,10 +26,6 @@ public class ArticleController {
 	private final ArticleUpdateService ARTICLE_UPDATE_SERVICE; // 중복 코드
 	private final ArticleDeleteService ARTICLE_DELETE_SERVICE;
 
-	/*
-	forward:
-	redirect:
-	 */
 	@GetMapping("/")
 	public String home(){
 		return "redirect:articleList";
@@ -53,7 +50,7 @@ public class ArticleController {
 	}
 
 	@PostMapping("/articleInsert")
-	public String articleInsert(@ModelAttribute ArticleUpdateDTO articleUpdateDTO) {
+	public String articleInsert(@ModelAttribute ArticleUpdateDTO articleUpdateDTO) throws IOException {
 		int result = ARTICLE_INSERT_SERVICE.service(articleUpdateDTO);
 		return "redirect:articleList";
 	}
@@ -75,5 +72,4 @@ public class ArticleController {
 		int result = ARTICLE_DELETE_SERVICE.service(articleId);
 		return "redirect:articleList";
 	}
-
 }

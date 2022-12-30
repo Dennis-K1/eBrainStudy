@@ -52,7 +52,7 @@
     SELECT article_category.name,
     article.article_id,
     article.title,
-    article.content, article.views, article.writer, article.date_created, IFNULL(article.last_updated,'-') AS last_updated
+    article.content, article.views, article.writer, article.date_created, IFNULL(article.last_updated,'-') AS last_updated, article.file_attached
     FROM
     article
     LEFT JOIN
@@ -138,6 +138,13 @@
     UPDATE article
     SET views = views + 1
     WHERE article_id = #{value}
+  </update>
+
+  <!--updateFileStatus-->
+  <update id="updateFileStatus" parameterType="map">
+    UPDATE article
+    SET file_attached = #{fileStatus}
+    WHERE article_id = #{articleId}
   </update>
 
 </mapper>

@@ -17,4 +17,9 @@ public class FileDAO {
 	public int insertFile(FileVO fileVO){
 		return SQL_SESSION.insert("mapper.file.insertFile", fileVO);
 	}
+
+	public int countArticleFiles(int articleId) {
+		return SQL_SESSION.selectOne("mapper.file.countArticleFiles", articleId);
+
+	}
 }

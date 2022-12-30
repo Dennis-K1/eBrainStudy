@@ -102,7 +102,7 @@ public class ArticleVO {
      * @param password 게시블 비밀번호
      */
     @Builder
-    public ArticleVO(int id, int categoryId, String title, String content, String writer, String password){
+    public ArticleVO(int id, int categoryId, String title, String content, String writer, String password, int fileAttached){
         this.id = id;
 //        //vo
 //        this.categoryVO = categoryVO;
@@ -111,5 +111,6 @@ public class ArticleVO {
         this.content = content;
         this.writer = writer;
         this.password = password;
+        this.fileAttached = fileAttached;
     }
 }
