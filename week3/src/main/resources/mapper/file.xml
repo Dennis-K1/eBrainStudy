@@ -7,17 +7,21 @@
   <resultMap id="file_vo" type="FileVO">
     <result property="id" column="file_id" />
     <result property="articleId" column="article_id" />
-    <result property="name" column="name" />
+    <result property="saveName" column="save_name" />
+    <result property="originalName" column="original_name" />
     <result property="path" column="path" />
+    <result property="extension" column="extension" />
   </resultMap>
 
   <insert id="insertFile" parameterType="FileVO">
     INSERT INTO
-      file (article_id, name, path)
+      file (article_id, save_name, original_name, path, extension)
     VALUES (
              #{articleId},
-             #{name},
-             #{path} )
+             #{saveName},
+             #{originalName},
+             #{path},
+             #{extension} )
   </insert>
 
 

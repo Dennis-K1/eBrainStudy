@@ -10,6 +10,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     List<CategoryVO> categoryList = (List<CategoryVO>) request.getAttribute("categoryList");
+    int numberOfFileInputs = 3;
 %>
 <html>
 <head>
@@ -25,7 +26,6 @@
 <div class="container-md mt-5 border border-dark ms-0">
     <form name="articleUpdateDTO" method="post"  enctype="multipart/form-data" action="articleInsert" onsubmit="return validateForm();">
         <table class="w-100 mt-3">
-            <from id="articleVO" name="articleVO">
                 <tr class="rowHeight border-bottom border-secondary border-top">
                     <td class="bg-secondary bg-opacity-50">
                         <span>카테고리</span>
@@ -77,11 +77,12 @@
                         <textarea name="content" class="w-100"></textarea>
                     </td>
                 </tr>
-            </from>
-            <form id="fileList" name="fileList">
+                <%
+                    for (int order=1; order<=numberOfFileInputs; order++) {
+                %>
                 <tr class="rowHeight p-1 border-bottom border-secondary">
                     <td class="bg-secondary bg-opacity-50">
-                        <input type="file" name="fileVO">
+                        <input type="file" name="fileList">
                     </td>
                     <td class="p-2">
                         <div class="filePreview">
@@ -89,7 +90,7 @@
                         </div>
                     </td>
                 </tr>
-            </form>
+                <% } %>
         </table>
         <div class="mt-5">
             <td>
