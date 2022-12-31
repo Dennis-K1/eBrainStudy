@@ -1,24 +1,37 @@
 package com.week3.service;
 
-import com.week3.dao.ArticleDAO;
+import com.week3.repository.ArticleRepository;
 import com.week3.dto.ArticleDetailDTO;
 import com.week3.dto.ArticleUpdateDTO;
 import com.week3.vo.ArticleVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * 게시글 수정을 위한 @Service
+ */
 @Service
 @RequiredArgsConstructor
 public class ArticleUpdateService {
+	/*
+	구현 필요
+	- 서버 유효성 검증
+	- 파일 업데이트
+	 */
 
 	/**
-	 * ARTICLE_DAO		- 게시글 테이블 접근을 위한 @Repository
+	 * articleRepository		- 게시글 테이블 접근을 위한 @Repository
 	 */
-	private final ArticleDAO ARTICLE_DAO;
+	private final ArticleRepository articleRepository;
 
+	/**
+	 * 클라이언트가 수정하여 전송한 게시글 정보 DTO 수취후 새로운 VO 객체 생성하여 업데이트
+	 * @param articleUpdateDTO 게시글 정보 DTO
+	 * @return 수행 결과
+	 */
 	public int service(ArticleUpdateDTO articleUpdateDTO) {
 		ArticleVO articleVO = createArticleVO(articleUpdateDTO);
-		int result = ARTICLE_DAO.updateArticle(articleVO);
+		int result = articleRepository.updateArticle(articleVO);
 		return result;
 	}
 
@@ -41,12 +54,7 @@ public class ArticleUpdateService {
 	 * 사용자 입력값 서버 유효성 검증
 	 * @param articleDetailDTO ArticleInputForm 페이지 사용자 입력값 모음
 	 */
-
 	private Boolean validateArticleInputValues(ArticleDetailDTO articleDetailDTO) {
 		return true;
 	}
-	/**
-	 * 검색창 카테고리 옵션 목록 반환
-	 * @return 검색창 카테고리 옵션 목록
-	 */
 }

@@ -1,7 +1,7 @@
 package com.week3.service;
 
-import com.week3.dao.ArticleDAO;
-import com.week3.dao.CategoryDAO;
+import com.week3.repository.ArticleRepository;
+import com.week3.repository.CategoryRepository;
 import com.week3.dto.ArticleListDTO;
 import com.week3.support.Validate;
 import com.week3.vo.ArticleVO;
@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * ArticleList 페이지 비즈니스 로직을 위한 @Service
@@ -26,17 +27,18 @@ public class ArticleListService{
 	 */
 
 	/**
-	 * ARTICLE_DAO		- 게시글 테이블 접근을 위한 @Repository
-	 * CATEGORY_DAO		- 카테고리 테이블 접근을 위한 @Repository
+	 * articleRepository		- 게시글 테이블 접근을 위한 @Repository
+	 * categoryRepository		- 카테고리 테이블 접근을 위한 @Repository
 	 */
-	private final ArticleDAO ARTICLE_DAO;
-	private final CategoryDAO CATEGORY_DAO;
+	private final ArticleRepository articleRepository;
+	private final CategoryRepository categoryRepository;
 
 	/**
 	 * 유저 검색값 유효성 검증 후, ArticleList 페이지에 필요한 데이터 모음 생성 및 반환
 	 * @param searchDTO 유저 검색값 객체
 	 * @return ArticleListDTO (데이터 모음 객체)
 	 */
+	@Transactional(rollbackFor = {RuntimeException.class, Exception.class})
 	public ArticleListDTO service(SearchDTO searchDTO) {
 		SearchDTO validatedSearchDTO = validateSearchParameters(searchDTO);
 		return createDTO(validatedSearchDTO);
@@ -63,7 +65,7 @@ public class ArticleListService{
 	 * @return 검색 대상 게시글 목록
 	 */
 	private List<ArticleVO> getArticleList(SearchDTO validatedSearchDTO) {
-		return ARTICLE_DAO.selectAllArticles(validatedSearchDTO);
+		return articleRepository.selectAllArticles(validatedSearchDTO);
 	}
 
 	/**
@@ -72,7 +74,7 @@ public class ArticleListService{
 	 * @return 검색 대상 게시글 수
 	 */
 	private int getNumberOfArticles(SearchDTO validatedSearchDTO) {
-		return ARTICLE_DAO.countArticles(validatedSearchDTO);
+		return articleRepository.countArticles(validatedSearchDTO);
 	}
 
 	/**
@@ -80,7 +82,7 @@ public class ArticleListService{
 	 * @return 검색창 카테고리 옵션 목록
 	 */
 	private List<CategoryVO> getCategoryList() {
-		return CATEGORY_DAO.selectCategories();
+		return categoryRepository.selectCategories();
 	}
 
 	/**

@@ -1,7 +1,8 @@
-package com.week3.dao;
+package com.week3.repository;
 
 import com.week3.vo.ArticleVO;
 import com.week3.dto.SearchDTO;
+import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
@@ -12,12 +13,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @RequiredArgsConstructor
-public class ArticleDAO {
+public class ArticleRepository {
 
 	/**
 	 * 데이터베이스 연결 세션
 	 */
-	private final SqlSession SQL_SESSION;
+	private final SqlSession sqlSession;
 
 	/**
 	 * 대상 게시물 1개 조회
@@ -25,7 +26,7 @@ public class ArticleDAO {
 	 * @return 게시물 객체
 	 */
 	public ArticleVO selectArticle(int articleId) {
-		return SQL_SESSION.selectOne("mapper.article.selectArticle",articleId);
+		return sqlSession.selectOne("mapper.article.selectArticle",articleId);
 	}
 
 	/**
@@ -34,7 +35,7 @@ public class ArticleDAO {
 	 * @return 게시글 목록
 	 */
 	public List selectAllArticles(SearchDTO validatedSearchDTO) {
-		return SQL_SESSION.selectList("mapper.article.selectArticles", validatedSearchDTO);
+		return sqlSession.selectList("mapper.article.selectArticles", validatedSearchDTO);
 	}
 
 	/**
@@ -43,23 +44,27 @@ public class ArticleDAO {
 	 * @return 검색 대상 게시글 수
 	 */
 	public int countArticles(SearchDTO validatedSearchDTO) {
-		return SQL_SESSION.selectOne("mapper.article.countArticles", validatedSearchDTO);
+		return sqlSession.selectOne("mapper.article.countArticles", validatedSearchDTO);
 	}
 
 	public int insertArticle(ArticleVO articleVO){
-		return SQL_SESSION.insert("mapper.article.insertArticle", articleVO);
+		return sqlSession.insert("mapper.article.insertArticle", articleVO);
 	}
 
 	public int deleteArticle(int articleId){
-		return SQL_SESSION.update("mapper.article.deleteArticle", articleId);
+		return sqlSession.update("mapper.article.deleteArticle", articleId);
 	}
 
 	public int updateArticle(ArticleVO articleVO){
-		return SQL_SESSION.update("mapper.article.updateArticle", articleVO);
+		return sqlSession.update("mapper.article.updateArticle", articleVO);
 	}
 
-	public void increaseViews ( int articleId) {
-		SQL_SESSION.update("mapper.article.increaseViews", articleId);
+	public void increaseViews (int articleId) {
+		sqlSession.update("mapper.article.increaseViews", articleId);
+	}
+
+	public void updateFileStatus (HashMap articleFileStatus) {
+		sqlSession.update("mapper.article.updateFileStatus", articleFileStatus);
 
 	}
 }

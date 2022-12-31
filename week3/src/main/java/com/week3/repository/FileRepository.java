@@ -1,4 +1,4 @@
-package com.week3.dao;
+package com.week3.repository;
 
 import com.week3.vo.FileVO;
 import lombok.RequiredArgsConstructor;
@@ -7,19 +7,19 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class FileDAO {
+public class FileRepository {
 
 	/**
 	 * 데이터베이스 연결 세션
 	 */
-	private final SqlSession SQL_SESSION;
+	private final SqlSession sqlSession;
 
 	public int insertFile(FileVO fileVO){
-		return SQL_SESSION.insert("mapper.file.insertFile", fileVO);
+		return sqlSession.insert("mapper.file.insertFile", fileVO);
 	}
 
 	public int countArticleFiles(int articleId) {
-		return SQL_SESSION.selectOne("mapper.file.countArticleFiles", articleId);
+		return sqlSession.selectOne("mapper.file.countArticleFiles", articleId);
 
 	}
 }

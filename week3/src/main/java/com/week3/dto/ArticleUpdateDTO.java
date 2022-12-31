@@ -1,7 +1,9 @@
 package com.week3.dto;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * ArticleInputForm 에서 전달되어
@@ -40,6 +42,11 @@ public class ArticleUpdateDTO {
 	 * 게시글 내용
 	 */
 	private String content;
+
+	/**
+	 * 첫 번째 파일
+	 */
+	private List<MultipartFile> fileList;
 
 //	/**
 //	 * 등록 대상 게시글 파일 모음

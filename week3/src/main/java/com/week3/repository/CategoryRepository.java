@@ -1,15 +1,18 @@
-package com.week3.dao;
+package com.week3.repository;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CategoryDAO {
+@RequiredArgsConstructor
+public class CategoryRepository {
 
-	@Autowired
-	SqlSession sqlSession;
+	/**
+	 * 데이터베이스 연결 세션
+	 */
+	private final SqlSession sqlSession;
 
 	public List selectCategories() {
 		return sqlSession.selectList("mapper.category.selectCategories");

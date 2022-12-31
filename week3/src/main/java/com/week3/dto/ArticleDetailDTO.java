@@ -6,7 +6,6 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
-
 /**
  * ArticleDetail 페이지에 표시할 데이터 객체 모음
  */
