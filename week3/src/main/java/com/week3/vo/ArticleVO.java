@@ -11,12 +11,9 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class ArticleVO {
-    /**
-     * article_category_id --> category_id ??
-     */
 /*
     id                `article_id` INT(10) NOT NULL AUTO_INCREMENT                  - 게시글 번호
-	categoryId        `article_category_id` INT(10) NOT NULL                        - 게시글 카테고리 번호
+	categoryId        `article_category_id` INT(10) NOT NULL                        - 게시글 카테고리 번호 (categoryVO로 대체)
 	title             `title` VARCHAR(100) NOT NULL                                 - 게시글 제목
 	content           `content` VARCHAR(2000) NOT NULL                              - 게시글 내용
 	views             `views` INT(10) NOT NULL DEFAULT '0'                          - 게시글 조회수
@@ -29,16 +26,10 @@ public class ArticleVO {
 	categoryVO        'article_category'  table                                     - 게시글 카테고리 테이블
 */
 
-
     /**
      * 게시글 번호
      */
     private int id;
-
-    /**
-     * 게시글 카테고리 번호
-     */
-    private int categoryId;
 
     /**
      * 게시글 제목
@@ -90,27 +81,29 @@ public class ArticleVO {
      */
     private CategoryVO categoryVO;
 
-
     /***
      * 게시글 등록 (insertArticle) : categoryId, title, content, writer, password
      * 게시글 수정 (updateArticle) : id, title, content, writer
-     * (NoArgsConstructor와 충돌 방지를 위해 생성자에 Builder 지정)
-//     * @param categoryId 게시글 카테고리 번호
+     * @param id 게시글 번호
+     * @param categoryVO 게시글 카테고리 번호 및 이름
      * @param title 게시글 제목
      * @param content 게시글 내용
      * @param writer 게시글 작성자
      * @param password 게시블 비밀번호
+     * @param fileAttached 게시글 파일 첨부 여부
      */
     @Builder
-    public ArticleVO(int id, int categoryId, String title, String content, String writer, String password, int fileAttached){
+    public ArticleVO(int id, CategoryVO categoryVO, String title, String content, String writer, String password, int fileAttached){
         this.id = id;
-//        //vo
-//        this.categoryVO = categoryVO;
-        this.categoryId = categoryId;
+        this.categoryVO = categoryVO;
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.password = password;
         this.fileAttached = fileAttached;
+    }
+
+    public int getCategoryId() {
+        return this.categoryVO.getId();
     }
 }

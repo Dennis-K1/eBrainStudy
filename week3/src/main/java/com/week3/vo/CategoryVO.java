@@ -1,8 +1,11 @@
 package com.week3.vo;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class CategoryVO {
 /*
     id   `article_category_id` INT(10) NOT NULL AUTO_INCREMENT  - 카테고리 번호
@@ -12,11 +15,16 @@ public class CategoryVO {
     /**
      * 카테고리 번호
      */
-    private int id;  // Category 클래스 내부에 있으니 categoryId 가 아니라 id여도 괜찮을까?
+    private int id;
 
     /**
      * 카테고리 이름
      */
     private String name;
 
+    @Builder
+    public CategoryVO (int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

@@ -103,8 +103,11 @@ public class ArticleInsertService {
 	 * @return 게시글 객체
 	 */
 	private ArticleVO createArticleVO(ArticleUpdateDTO articleUpdateDTO) {
+		CategoryVO categoryVO = CategoryVO.builder()
+			.id(articleUpdateDTO.getCategoryId())
+			.build();
 		ArticleVO articleVO = ArticleVO.builder()
-			.categoryId(articleUpdateDTO.getCategoryId())
+			.categoryVO(categoryVO)
 			.title(articleUpdateDTO.getTitle())
 			.content(articleUpdateDTO.getContent())
 			.writer(articleUpdateDTO.getWriter())
