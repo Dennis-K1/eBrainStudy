@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.category">
+
+  <resultMap id="category_vo" type="CategoryVO">
+    <result property="id" column="article_category_id" />
+    <result property="name" column="name" />
+  </resultMap>
+
+  <select id="selectCategories" resultMap="category_vo">
+    SELECT
+        *
+    FROM
+        article_category
+  </select>
+
+</mapper>
