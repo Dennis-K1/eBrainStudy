@@ -1,0 +1,8 @@
+{
+  "name": "bingo",
+  "version": "1.0.0",
+  "main": "game.js",
+  "type": "module",
+  "dependencies": {
+  }
+}
