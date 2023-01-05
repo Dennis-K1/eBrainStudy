@@ -1,8 +1,6 @@
 package com.week4.repository;
 
-import com.week4.vo.ArticleVO;
 import com.week4.vo.BoardVO;
-import com.week4.vo.CategoryVO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
@@ -25,15 +23,15 @@ public class ArticleRepository {
 	 * @param articleId 대상 게시글 번호
 	 * @return 게시글 객체
 	 */
-	public ArticleVO selectArticle(int articleId) {
+	public BoardVO.ArticleVO selectArticle(int articleId) {
 		return sqlSession.selectOne("mapper.article.selectArticle",articleId);
 	}
 
-	public List<BoardVO> getBoardVO() {
-		return sqlSession.selectList("mapper.article.boardVOTEST");
+	public List<BoardVO.ArticleVO> getArticleList() {
+		return sqlSession.selectList("mapper.article.selectAllArticles");
 	}
 
-	public List<CategoryVO> getBoardCategoryList() {
+	public List<BoardVO.CategoryVO> getCategoryList() {
 		return sqlSession.selectList("mapper.article.selectAllCategories");
 	}
 

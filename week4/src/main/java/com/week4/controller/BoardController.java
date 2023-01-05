@@ -1,10 +1,7 @@
 package com.week4.controller;
 
 import com.week4.service.ArticleService;
-import com.week4.vo.ArticleVO;
 import com.week4.vo.BoardVO;
-import com.week4.vo.CategoryVO;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,20 +18,18 @@ public class BoardController {
 
 	private final ArticleService articleService;
 
-	/*
-	게시글 전부 조회 테스트
+	/**
+	 * 메소드명 ????????????????????
+	 * 게시판 정보 전체 조회
+	 * @return 게시글 목록 (댓글 및 카테고리 정보 포함), 카테고리 목록
 	 */
 	@GetMapping("articles")
-	public List<BoardVO> getArticleList() {
-		return articleService.getBoardVO();
-	}
-
-	/*
-	카테고리 조회 테스트
-	 */
-	@GetMapping("categories")
-	public List<CategoryVO> getCategoryList() {
-		return articleService.getBoardCategories();
+	public BoardVO getBoardVO() {
+		BoardVO boardVO = BoardVO.builder()
+			.articleList(articleService.getArticleList())
+			.categoryList(articleService.getCategoryList())
+			.build();
+		return boardVO;
 	}
 
 	@PostMapping("articles")
@@ -47,8 +42,13 @@ public class BoardController {
 		return "";
 	}
 
+	/**
+	 * 게시글 조회
+	 * @param articleId 대상 게시글 번호
+	 * @return 게시글 정보 및 댓글 목록
+	 */
 	@GetMapping("articles/{articleId}")
-	public ArticleVO getArticle(@PathVariable("articleId") int articleId) {
+	public BoardVO.ArticleVO getArticle(@PathVariable("articleId") int articleId) {
 		return articleService.getArticle(articleId);
 	}
 

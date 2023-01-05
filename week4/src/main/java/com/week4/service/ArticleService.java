@@ -1,12 +1,8 @@
 package com.week4.service;
 
 import com.week4.repository.ArticleRepository;
-import com.week4.repository.CategoryRepository;
-import com.week4.repository.CommentRepository;
 import com.week4.repository.FileRepository;
-import com.week4.vo.ArticleVO;
 import com.week4.vo.BoardVO;
-import com.week4.vo.CategoryVO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,8 +12,6 @@ import org.springframework.stereotype.Service;
 public class ArticleService {
 
 	private final ArticleRepository articleRepository;
-	private final CategoryRepository categoryRepository;
-	private final CommentRepository commentRepository;
 	private final FileRepository fileRepository;
 
 
@@ -26,16 +20,24 @@ public class ArticleService {
 	 * @param articleId 대상 게시글 번호
 	 * @return 대상 게시글 객체
 	 */
-	public ArticleVO getArticle(int articleId) {
+	public BoardVO.ArticleVO getArticle(int articleId) {
 		return articleRepository.selectArticle(articleId);
 	}
 
-	public List<BoardVO> getBoardVO() {
-		return articleRepository.getBoardVO();
+	/**
+	 * 게시글 목록 조회
+	 * @return 목록 내 게시글 정보 및 댓글 목록
+	 */
+	public List<BoardVO.ArticleVO> getArticleList() {
+		return articleRepository.getArticleList();
 	}
 
-	public List<CategoryVO> getBoardCategories() {
-		return articleRepository.getBoardCategoryList();
+	/**
+	 * 카테고리 전체 조회
+	 * @return 카테고리 정보
+	 */
+	public List<BoardVO.CategoryVO> getCategoryList() {
+		return articleRepository.getCategoryList();
 	}
 
 }
