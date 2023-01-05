@@ -1,6 +1,8 @@
 package com.week4.vo;
 
+import java.util.List;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,8 +10,7 @@ import lombok.ToString;
 
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
+@NoArgsConstructor
 public class ArticleVO {
 /*
     id                `article_id` INT(10) NOT NULL AUTO_INCREMENT                  - 게시글 번호
@@ -81,29 +82,9 @@ public class ArticleVO {
      */
     private CategoryVO categoryVO;
 
-    /***
-     * 게시글 등록 (insertArticle) : categoryId, title, content, writer, password
-     * 게시글 수정 (updateArticle) : id, title, content, writer
-     * @param id 게시글 번호
-     * @param categoryVO 게시글 카테고리 번호 및 이름
-     * @param title 게시글 제목
-     * @param content 게시글 내용
-     * @param writer 게시글 작성자
-     * @param password 게시블 비밀번호
-     * @param fileAttached 게시글 파일 첨부 여부
+    /**
+     *  게시글 댓글 목록
      */
-    @Builder
-    public ArticleVO(int id, CategoryVO categoryVO, String title, String content, String writer, String password, int fileAttached){
-        this.id = id;
-        this.categoryVO = categoryVO;
-        this.title = title;
-        this.content = content;
-        this.writer = writer;
-        this.password = password;
-        this.fileAttached = fileAttached;
-    }
+    private List<CommentVO> commentList;
 
-    public int getCategoryId() {
-        return this.categoryVO.getId();
-    }
 }

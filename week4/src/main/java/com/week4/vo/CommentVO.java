@@ -2,9 +2,10 @@ package com.week4.vo;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@NoArgsConstructor
 public class CommentVO {
 /*
     id   `article_comment_id` INT(10) NOT NULL AUTO_INCREMENT                 - 댓글 번호

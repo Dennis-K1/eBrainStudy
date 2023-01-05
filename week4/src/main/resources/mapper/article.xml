@@ -4,12 +4,19 @@
 
 <mapper namespace="mapper.article">
 
-  <resultMap id="category_vo" type="CategoryVO">
+  <resultMap id="categoryVO" type="CategoryVO">
     <result property="id" column="article_category_id" />
     <result property="name" column="name" />
   </resultMap>
 
-  <resultMap id="article_vo" type="ArticleVO">
+  <resultMap id="commentVO" type="CommentVO">
+    <result property="id" column="article_comment_id" />
+    <result property="articleId" column="article_id" />
+    <result property="content" column="content" />
+    <result property="dateCreated" column="date_created" />
+  </resultMap>
+
+  <resultMap id="articleVO" type="ArticleVO">
     <result property="id" column="article_id" />
     <result property="title" column="title" />
     <result property="content" column="content" />
@@ -20,53 +27,69 @@
     <result property="lastUpdated" column="last_updated" />
     <result property="fileAttached" column="file_attached" />
     <result property="articleDeleted" column="article_deleted" />
-    <collection property="categoryVO" resultMap="category_vo" />
+    <collection property="categoryVO" resultMap="categoryVO" />
+    <collection property="commentList" column="article_id" javaType="java.util.ArrayList" ofType="CommentVO" select="getCommentList" />
   </resultMap>
 
+  <resultMap id="boardVO" type="BoardVO">
+    <collection property="articleVO" resultMap="articleVO"/>
+  </resultMap>
 
-  <sql id="searchParameters">
-    <trim prefix="and" prefixOverrides="and|or">
-      <if test="startDate != null">
-        #{startDate} &lt; article.date_created
-      </if>
-      <if test="endDate != null">
-        and #{endDate} + INTERVAL 1 DAY &gt; article.date_created
-      </if>
-      <if test="keyword != null">
-        <bind name="keyword" value="'%' + keyword + '%'" />
-        and article.title LIKE #{keyword}
-      </if>
-      <if test="categoryId != null">
-        and article_category.article_category_id LIKE #{categoryId}
-      </if>
-    </trim>
-  </sql>
-
-  <!--selectArticles-->
-  <select id="selectArticles" resultMap="article_vo" parameterType="SearchDTO">
-    SELECT
-        category.*, article.article_id, article.title,
-        article.content, article.views, article.writer,
-        article.date_created, IFNULL(article.last_updated,'-') AS last_updated,
-        article.file_attached
-    FROM
-        article
-        LEFT JOIN article_category AS category
+  <select id="boardVOTEST" resultMap="boardVO">
+    SELECT article.*, category.*
+    FROM article
+    LEFT JOIN article_category AS category
         ON article.article_category_id = category.article_category_id
-    WHERE
-        article.article_deleted = 0
-        <include refid="searchParameters"></include>
-        ORDER BY article.article_id DESC
-        <if test="PAGE_SIZE != null">
-        LIMIT #{PAGE_SIZE}
-        </if>
-        <if test="firstArticleIndex != null">
-        OFFSET #{firstArticleIndex}
-        </if>
+    </select>
+  <select id="getCommentList" resultMap="commentVO">
+    SELECT comment.*
+    FROM article_comment AS comment
+    WHERE article_id = #{article_id}
   </select>
 
+    <sql id="searchParameters">
+      <trim prefix="and" prefixOverrides="and|or">
+        <if test="startDate != null">
+          #{startDate} &lt; article.date_created
+        </if>
+        <if test="endDate != null">
+          and #{endDate} + INTERVAL 1 DAY &gt; article.date_created
+        </if>
+        <if test="keyword != null">
+          <bind name="keyword" value="'%' + keyword + '%'" />
+          and article.title LIKE #{keyword}
+        </if>
+        <if test="categoryId != null">
+          and article_category.article_category_id LIKE #{categoryId}
+        </if>
+      </trim>
+    </sql>
+
+  <!--  &lt;!&ndash;selectArticles&ndash;&gt;-->
+<!--  <select id="selectArticles" resultMap="articleVO" parameterType="SearchDTO">-->
+<!--    SELECT-->
+<!--        category.*, article.article_id, article.title,-->
+<!--        article.content, article.views, article.writer,-->
+<!--        article.date_created, IFNULL(article.last_updated,'-') AS last_updated,-->
+<!--        article.file_attached-->
+<!--    FROM-->
+<!--        article-->
+<!--        LEFT JOIN article_category AS category-->
+<!--        ON article.article_category_id = category.article_category_id-->
+<!--    WHERE-->
+<!--        article.article_deleted = 0-->
+<!--        <include refid="searchParameters"></include>-->
+<!--        ORDER BY article.article_id DESC-->
+<!--        <if test="PAGE_SIZE != null">-->
+<!--        LIMIT #{PAGE_SIZE}-->
+<!--        </if>-->
+<!--        <if test="firstArticleIndex != null">-->
+<!--        OFFSET #{firstArticleIndex}-->
+<!--        </if>-->
+<!--  </select>-->
+
   <!--selectArticle-->
-  <select id="selectArticle" resultMap="article_vo" parameterType="integer">
+  <select id="selectArticle" resultMap="articleVO" parameterType="integer">
     SELECT
         category.*, article.article_id, article.password,
         article.title, article.content, article.views,
@@ -79,78 +102,90 @@
         article_id = #{value}
   </select>
 
-  <!--countArticles-->
-  <select id="countArticles" resultType="integer" parameterType="SearchDTO">
+  <!--TESTselectArticle-->
+  <select id="TESTselectArticle" resultMap="boardVO">
     SELECT
-        COUNT(*)
+      category.*, article.article_id, article.password,
+      article.title, article.content, article.views,
+      article.writer, article.date_created, IFNULL(article.last_updated,'-') AS last_updated
     FROM
-        article
-        LEFT JOIN article_category
-        ON article.article_category_id = article_category.article_category_id
-    WHERE
-        article.article_deleted = 0
-        <include refid="searchParameters"></include>
+      article
+        LEFT JOIN article_category AS category
+                  ON article.article_category_id = category.article_category_id
   </select>
 
-
-  <!--insertArticle-->
-  <insert id="insertArticle" parameterType="ArticleVO">
-    INSERT INTO
-        article (article_category_id, title, content, writer, password)
-    VALUES (
-        #{categoryId},
-        #{title},
-        #{content},
-        #{writer},
-        #{password} )
-    <selectKey keyProperty="id" resultType="integer">
-    SELECT
-        LAST_INSERT_ID()
-    </selectKey>
-  </insert>
-
-  <!--deleteArticle
-      삭제 : article_deleted = 1, 미삭제 : article_deleted = 0 (default)-->
-  <update id="deleteArticle" parameterType="integer">
-    UPDATE
-        article
-    SET
-        article_deleted = 1
-    WHERE
-        article_id = #{value}
-  </update>
+<!--  &lt;!&ndash;countArticles&ndash;&gt;-->
+<!--  <select id="countArticles" resultType="integer" parameterType="SearchDTO">-->
+<!--    SELECT-->
+<!--        COUNT(*)-->
+<!--    FROM-->
+<!--        article-->
+<!--        LEFT JOIN article_category-->
+<!--        ON article.article_category_id = article_category.article_category_id-->
+<!--    WHERE-->
+<!--        article.article_deleted = 0-->
+<!--        <include refid="searchParameters"></include>-->
+<!--  </select>-->
 
 
-  <!--updateArticle-->
-  <update id="updateArticle" parameterType="ArticleVO">
-    UPDATE
-        article
-    SET
-        title = #{title},
-        content = #{content},
-        writer = #{writer}
-    WHERE
-        article_id = #{id}
-  </update>
+<!--  &lt;!&ndash;insertArticle&ndash;&gt;-->
+<!--  <insert id="insertArticle" parameterType="ArticleVO">-->
+<!--    INSERT INTO-->
+<!--        article (article_category_id, title, content, writer, password)-->
+<!--    VALUES (-->
+<!--        #{categoryId},-->
+<!--        #{title},-->
+<!--        #{content},-->
+<!--        #{writer},-->
+<!--        #{password} )-->
+<!--    <selectKey keyProperty="id" resultType="integer">-->
+<!--    SELECT-->
+<!--        LAST_INSERT_ID()-->
+<!--    </selectKey>-->
+<!--  </insert>-->
 
-  <!--increaseViews-->
-  <update id="increaseViews" parameterType="integer">
-    UPDATE
-        article
-    SET
-        views = views + 1
-    WHERE
-        article_id = #{value}
-  </update>
+<!--  &lt;!&ndash;deleteArticle-->
+<!--      삭제 : article_deleted = 1, 미삭제 : article_deleted = 0 (default)&ndash;&gt;-->
+<!--  <update id="deleteArticle" parameterType="integer">-->
+<!--    UPDATE-->
+<!--        article-->
+<!--    SET-->
+<!--        article_deleted = 1-->
+<!--    WHERE-->
+<!--        article_id = #{value}-->
+<!--  </update>-->
 
-  <!--updateFileStatus-->
-  <update id="updateFileStatus" parameterType="map">
-    UPDATE
-        article
-    SET
-        file_attached = #{fileStatus}
-    WHERE
-        article_id = #{articleId}
-  </update>
+
+<!--  &lt;!&ndash;updateArticle&ndash;&gt;-->
+<!--  <update id="updateArticle" parameterType="ArticleVO">-->
+<!--    UPDATE-->
+<!--        article-->
+<!--    SET-->
+<!--        title = #{title},-->
+<!--        content = #{content},-->
+<!--        writer = #{writer}-->
+<!--    WHERE-->
+<!--        article_id = #{id}-->
+<!--  </update>-->
+
+<!--  &lt;!&ndash;increaseViews&ndash;&gt;-->
+<!--  <update id="increaseViews" parameterType="integer">-->
+<!--    UPDATE-->
+<!--        article-->
+<!--    SET-->
+<!--        views = views + 1-->
+<!--    WHERE-->
+<!--        article_id = #{value}-->
+<!--  </update>-->
+
+<!--  &lt;!&ndash;updateFileStatus&ndash;&gt;-->
+<!--  <update id="updateFileStatus" parameterType="map">-->
+<!--    UPDATE-->
+<!--        article-->
+<!--    SET-->
+<!--        file_attached = #{fileStatus}-->
+<!--    WHERE-->
+<!--        article_id = #{articleId}-->
+<!--  </update>-->
 
 </mapper>
