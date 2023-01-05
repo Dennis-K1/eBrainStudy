@@ -28,8 +28,8 @@ public class ArticleService {
 	 * 게시글 목록 조회
 	 * @return 목록 내 게시글 정보 및 댓글 목록
 	 */
-	public List<BoardVO.ArticleVO> getArticleList() {
-		return articleRepository.getArticleList();
+	public List<BoardVO.ArticleVO> getArticleList(BoardVO.SearchVO validatedSearchVO) {
+		return articleRepository.getArticleList(validatedSearchVO);
 	}
 
 	/**

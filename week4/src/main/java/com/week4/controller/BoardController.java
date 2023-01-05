@@ -1,6 +1,7 @@
 package com.week4.controller;
 
 import com.week4.service.ArticleService;
+import com.week4.util.Validate;
 import com.week4.vo.BoardVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,10 +25,12 @@ public class BoardController {
 	 * @return 게시글 목록 (댓글 및 카테고리 정보 포함), 카테고리 목록
 	 */
 	@GetMapping("articles")
-	public BoardVO getBoardVO() {
+	public BoardVO getBoardVO(BoardVO.SearchVO searchVO) {
+		BoardVO.SearchVO validatedSearchVO = Validate.validateSearchVO(searchVO);
 		BoardVO boardVO = BoardVO.builder()
-			.articleList(articleService.getArticleList())
+			.articleList(articleService.getArticleList(validatedSearchVO))
 			.categoryList(articleService.getCategoryList())
+			.searchVO(validatedSearchVO)
 			.build();
 		return boardVO;
 	}

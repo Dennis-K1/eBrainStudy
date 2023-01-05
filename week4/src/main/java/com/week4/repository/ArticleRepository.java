@@ -27,8 +27,8 @@ public class ArticleRepository {
 		return sqlSession.selectOne("mapper.article.selectArticle",articleId);
 	}
 
-	public List<BoardVO.ArticleVO> getArticleList() {
-		return sqlSession.selectList("mapper.article.selectAllArticles");
+	public List<BoardVO.ArticleVO> getArticleList(BoardVO.SearchVO validatedSearchVO) {
+		return sqlSession.selectList("mapper.article.selectAllArticles", validatedSearchVO);
 	}
 
 	public List<BoardVO.CategoryVO> getCategoryList() {
