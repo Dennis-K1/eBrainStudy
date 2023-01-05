@@ -4,62 +4,101 @@
 
 <mapper namespace="mapper.article">
 
-  <resultMap id="categoryVO" type="CategoryVO">
-    <result property="id" column="article_category_id" />
-    <result property="name" column="name" />
-  </resultMap>
-
-  <resultMap id="commentVO" type="CommentVO">
-    <result property="id" column="article_comment_id" />
-    <result property="articleId" column="article_id" />
-    <result property="content" column="content" />
-    <result property="dateCreated" column="date_created" />
-  </resultMap>
-
-  <resultMap id="articleVO" type="ArticleVO">
+  <!--
+    article 테이블 매핑 게시글 정보, 게시글 카테고리 정보, 게시글 댓글 목록
+  -->
+  <resultMap id="boardVOArticleVO" type="com.week4.vo.BoardVO$ArticleVO">
     <result property="id" column="article_id" />
     <result property="title" column="title" />
     <result property="content" column="content" />
     <result property="views" column="views" />
     <result property="writer" column="writer" />
     <result property="password" column="password" />
+    <result property="password" column="password" />
     <result property="dateCreated" column="date_created" />
     <result property="lastUpdated" column="last_updated" />
     <result property="fileAttached" column="file_attached" />
     <result property="articleDeleted" column="article_deleted" />
-    <collection property="categoryVO" resultMap="categoryVO" />
-    <collection property="commentList" column="article_id" javaType="java.util.ArrayList" ofType="CommentVO" select="selectCommentList" />
+    <result property="categoryId" column="article_category_id" />
+    <!-- !!!!!!!!!!!!<association 없이 selectAllArticles 의 query 결과를 바로 categoryName에 매핑할 수는 없는지??>!!!!!!!!!!!   -->
+    <association property="categoryName" column="article_category_id" select="selectCategoryNameById" />
+    <collection property="commentList" column="article_id" javaType="java.util.ArrayList" ofType="boardVOCommentVO" select="selectAllCommentsById" />
   </resultMap>
 
-  <resultMap id="boardVO" type="BoardVO">
-    <collection property="articleVO" resultMap="articleVO"/>
-  </resultMap>
-
-  <resultMap id="boardVOCategory" type="com.week4.vo.BoardVO$CategoryVO">
+  <!--
+    article_category 테이블 매핑 카테고리 정보
+  -->
+  <resultMap id="boardVOCategoryVO" type="com.week4.vo.BoardVO$CategoryVO">
     <result property="id" column="article_category_id" />
     <result property="name" column="name" />
   </resultMap>
 
-  <select id="boardVOTEST" resultMap="boardVO">
+  <!--
+    article_comment 테이블 매핑 댓글 정보
+  -->
+  <resultMap id="boardVOCommentVO" type="com.week4.vo.BoardVO$CommentVO">
+    <result property="id" column="article_comment_id" />
+    <result property="articleId" column="article_id" />
+    <result property="content" column="content" />
+    <result property="dateCreated" column="date_created" />
+  </resultMap>
+
+  <!--
+    BoardVO.articleList 를 위한 게시글 및 카테고리 번호 조회
+  -->
+  <select id="selectAllArticles" resultMap="boardVOArticleVO">
     SELECT article.*, category.*
     FROM article
     LEFT JOIN article_category AS category
         ON article.article_category_id = category.article_category_id
     </select>
 
-
-  <select id="selectCommentList" resultMap="commentVO">
+  <!--
+    BoardVO.articleList 를 위한 대상 게시글 댓글 목록 조회
+  -->
+  <select id="selectAllCommentsById" resultMap="boardVOCommentVO">
     SELECT comment.*
     FROM article_comment AS comment
     WHERE article_id = #{article_id}
   </select>
 
-  <select id="selectAllCategories" resultMap="boardVOCategory">
+  <!--
+    BoardVO.articleList 를 위한 대상 게시글 카테고리 이름 조회
+  -->
+  <select id="selectCategoryNameById" resultType="java.lang.String">
+    SELECT name
+    FROM article_category
+    WHERE article_category_id = #{article_category_id}
+  </select>
+
+  <!--
+    BoardVO.categoryList 를 위한 카테고리 정보 조회
+  -->
+  <select id="selectAllCategories" resultMap="boardVOCategoryVO">
     SELECT
       *
     FROM
       article_category
   </select>
+
+  <!--
+    Parameter : articleId
+    대상 게시글 조회
+  -->
+  <select id="selectArticle" resultMap="boardVOArticleVO" parameterType="integer">
+    SELECT
+        category.*, article.article_id, article.password,
+        article.title, article.content, article.views,
+        article.writer, article.date_created, IFNULL(article.last_updated,'-') AS last_updated
+    FROM
+        article
+        LEFT JOIN article_category AS category
+        ON article.article_category_id = category.article_category_id
+    WHERE
+        article_id = #{value}
+  </select>
+
+
 
     <sql id="searchParameters">
       <trim prefix="and" prefixOverrides="and|or">
@@ -102,31 +141,7 @@
 <!--        </if>-->
 <!--  </select>-->
 
-  <!--selectArticle-->
-  <select id="selectArticle" resultMap="articleVO" parameterType="integer">
-    SELECT
-        category.*, article.article_id, article.password,
-        article.title, article.content, article.views,
-        article.writer, article.date_created, IFNULL(article.last_updated,'-') AS last_updated
-    FROM
-        article
-        LEFT JOIN article_category AS category
-        ON article.article_category_id = category.article_category_id
-    WHERE
-        article_id = #{value}
-  </select>
 
-  <!--TESTselectArticle-->
-  <select id="TESTselectArticle" resultMap="boardVO">
-    SELECT
-      category.*, article.article_id, article.password,
-      article.title, article.content, article.views,
-      article.writer, article.date_created, IFNULL(article.last_updated,'-') AS last_updated
-    FROM
-      article
-        LEFT JOIN article_category AS category
-                  ON article.article_category_id = category.article_category_id
-  </select>
 
 <!--  &lt;!&ndash;countArticles&ndash;&gt;-->
 <!--  <select id="countArticles" resultType="integer" parameterType="SearchDTO">-->
