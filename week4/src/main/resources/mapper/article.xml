@@ -28,11 +28,16 @@
     <result property="fileAttached" column="file_attached" />
     <result property="articleDeleted" column="article_deleted" />
     <collection property="categoryVO" resultMap="categoryVO" />
-    <collection property="commentList" column="article_id" javaType="java.util.ArrayList" ofType="CommentVO" select="getCommentList" />
+    <collection property="commentList" column="article_id" javaType="java.util.ArrayList" ofType="CommentVO" select="selectCommentList" />
   </resultMap>
 
   <resultMap id="boardVO" type="BoardVO">
     <collection property="articleVO" resultMap="articleVO"/>
+  </resultMap>
+
+  <resultMap id="boardVOCategory" type="com.week4.vo.BoardVO$CategoryVO">
+    <result property="id" column="article_category_id" />
+    <result property="name" column="name" />
   </resultMap>
 
   <select id="boardVOTEST" resultMap="boardVO">
@@ -41,10 +46,19 @@
     LEFT JOIN article_category AS category
         ON article.article_category_id = category.article_category_id
     </select>
-  <select id="getCommentList" resultMap="commentVO">
+
+
+  <select id="selectCommentList" resultMap="commentVO">
     SELECT comment.*
     FROM article_comment AS comment
     WHERE article_id = #{article_id}
+  </select>
+
+  <select id="selectAllCategories" resultMap="boardVOCategory">
+    SELECT
+      *
+    FROM
+      article_category
   </select>
 
     <sql id="searchParameters">

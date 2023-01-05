@@ -6,6 +6,7 @@ import com.week4.repository.CommentRepository;
 import com.week4.repository.FileRepository;
 import com.week4.vo.ArticleVO;
 import com.week4.vo.BoardVO;
+import com.week4.vo.CategoryVO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,10 @@ public class ArticleService {
 
 	public List<BoardVO> getBoardVO() {
 		return articleRepository.getBoardVO();
+	}
+
+	public List<CategoryVO> getBoardCategories() {
+		return articleRepository.getBoardCategoryList();
 	}
 
 }

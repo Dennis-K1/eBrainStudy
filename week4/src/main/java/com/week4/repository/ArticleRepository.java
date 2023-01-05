@@ -2,7 +2,7 @@ package com.week4.repository;
 
 import com.week4.vo.ArticleVO;
 import com.week4.vo.BoardVO;
-import java.util.HashMap;
+import com.week4.vo.CategoryVO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
@@ -31,6 +31,10 @@ public class ArticleRepository {
 
 	public List<BoardVO> getBoardVO() {
 		return sqlSession.selectList("mapper.article.boardVOTEST");
+	}
+
+	public List<CategoryVO> getBoardCategoryList() {
+		return sqlSession.selectList("mapper.article.selectAllCategories");
 	}
 
 //	/**
