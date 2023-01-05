@@ -21,7 +21,7 @@ public class ArticleService {
 	 * @return 대상 게시글 객체
 	 */
 	public BoardVO.ArticleVO getArticle(int articleId) {
-		return articleRepository.selectArticle(articleId);
+		return articleRepository.getArticle(articleId);
 	}
 
 	/**
@@ -38,6 +38,18 @@ public class ArticleService {
 	 */
 	public List<BoardVO.CategoryVO> getCategoryList() {
 		return articleRepository.getCategoryList();
+	}
+
+	public int getNumberOfArticles(BoardVO.SearchVO validatedSearchVO) {
+		return articleRepository.getNumberOfArticles(validatedSearchVO);
+	}
+
+	public int registerArticle(BoardVO.ArticleVO articleVO) {
+		return articleRepository.registerArticle(articleVO);
+	}
+
+	public int deleteArticle(int articleId) {
+		return articleRepository.deleteArticle(articleId);
 	}
 
 }

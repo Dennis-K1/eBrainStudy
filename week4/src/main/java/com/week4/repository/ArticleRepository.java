@@ -23,7 +23,7 @@ public class ArticleRepository {
 	 * @param articleId 대상 게시글 번호
 	 * @return 게시글 객체
 	 */
-	public BoardVO.ArticleVO selectArticle(int articleId) {
+	public BoardVO.ArticleVO getArticle(int articleId) {
 		return sqlSession.selectOne("mapper.article.selectArticle",articleId);
 	}
 
@@ -35,42 +35,33 @@ public class ArticleRepository {
 		return sqlSession.selectList("mapper.article.selectAllCategories");
 	}
 
-//	/**
-//	 * 검색 대상 게시글 목록 조회
-//	 * @param validatedSearchDTO 유효성 검증한 유저 검색값 객체
-//	 * @return 게시글 목록
-//	 */
-//	public List selectAllArticles(SearchDTO validatedSearchDTO) {
-//		return sqlSession.selectList("mapper.article.selectArticles", validatedSearchDTO);
-//	}
+	/**
+	 * 검색 대상 총 게시글 수 조회
+	 * @param validatedSearchVO 유효성 검증한 유저 검색값 객체
+	 * @return 검색 대상 게시글 수
+	 */
+	public int getNumberOfArticles(BoardVO.SearchVO validatedSearchVO) {
+		return sqlSession.selectOne("mapper.article.countArticles", validatedSearchVO);
+	}
 
-//	/**
-//	 * 검색 대상 총 게시글 수 조회
-//	 * @param validatedSearchDTO 유효성 검증한 유저 검색값 객체
-//	 * @return 검색 대상 게시글 수
-//	 */
-//	public int countArticles(SearchDTO validatedSearchDTO) {
-//		return sqlSession.selectOne("mapper.article.countArticles", validatedSearchDTO);
-//	}
-//
-//	/**
-//	 * 게시글 정보 DB 삽입
-//	 * @param articleVO 대상 게시글 객체
-//	 * @return 수행 결과
-//	 */
-//	public int insertArticle(ArticleVO articleVO){
-//		return sqlSession.insert("mapper.article.insertArticle", articleVO);
-//	}
-//
-//	/**
-//	 * 대상 게시글 DB 삭제
-//	 * @param articleId 대상 게시글 번호
-//	 * @return 수행 결과
-//	 */
-//	public int deleteArticle(int articleId){
-//		return sqlSession.update("mapper.article.deleteArticle", articleId);
-//	}
-//
+	/**
+	 * 게시글 정보 DB 삽입
+	 * @param articleVO 대상 게시글 객체
+	 * @return 수행 결과
+	 */
+	public int registerArticle(BoardVO.ArticleVO articleVO){
+		return sqlSession.insert("mapper.article.insertArticle", articleVO);
+	}
+
+	/**
+	 * 대상 게시글 DB 삭제
+	 * @param articleId 대상 게시글 번호
+	 * @return 수행 결과
+	 */
+	public int deleteArticle(int articleId){
+		return sqlSession.update("mapper.article.deleteArticle", articleId);
+	}
+
 //	/**
 //	 * 대상 게시글 수정
 //	 * @param articleVO 대상 게시글 정보 객체 (번호 포함)

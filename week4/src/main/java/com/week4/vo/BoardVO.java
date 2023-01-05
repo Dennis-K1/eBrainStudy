@@ -11,9 +11,25 @@ import lombok.ToString;
 @NoArgsConstructor
 public class BoardVO {
 
+	/**
+	 * 검색 조건 기반 게시글 목록 (카테고리 정보 및 댓글 포함)
+	 */
 	private List<ArticleVO> articleList;
+
+	/**
+	 * 카테고리 전체 목록
+	 */
 	private List<CategoryVO> categoryList;
+
+	/**
+	 * 유저 검색값 (검색 조건) 및 페이징 정보
+	 */
 	private SearchVO searchVO;
+
+	/**
+	 *  검색 조건 기반 총 게시글 수
+	 */
+	private int numberOfArticles;
 
 	/*
 		내부 클래스 CategoryVO와 ArticleVO 의 CategoryVO가 충돌을 일으켜 ArticleVO의 CategoryVO는 "id", "name" 분리하여 표기.
@@ -21,12 +37,14 @@ public class BoardVO {
  	*/
 
 	@Builder
-	public BoardVO (List<ArticleVO> articleList, List<CategoryVO> categoryList, SearchVO searchVO) {
+	public BoardVO (List<ArticleVO> articleList, List<CategoryVO> categoryList, SearchVO searchVO, int numberOfArticles) {
 		this.articleList = articleList;
 		this.categoryList = categoryList;
 		this.searchVO = searchVO;
+		this.numberOfArticles = numberOfArticles;
 	}
 	@Getter
+	@Setter
 	@NoArgsConstructor
 	public static class ArticleVO {
 

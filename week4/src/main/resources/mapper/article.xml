@@ -71,6 +71,7 @@
 
   <!--
     BoardVO.articleList 를 위한 게시글 및 카테고리 번호 조회
+      password 로 인해 * 사용 불가
     Parameter : SearchVO (검색값 저장 객체)
       검색값 : searchParameters 참조,
       PAGE_SIZE : 페이지 표시 게시글 수
@@ -78,7 +79,15 @@
   -->
   <select id="selectAllArticles" resultMap="boardVOArticleVO" parameterType="com.week4.vo.BoardVO$SearchVO">
     SELECT
-        category.*, article.*
+        category.*,
+        article.article_id,
+        article.title,
+        article.content,
+        article.views,
+        article.writer,
+        article.date_created,
+        article.file_attached,
+        IFNULL(article.last_updated,'-') AS last_updated
     FROM
         article
         LEFT JOIN article_category AS category
@@ -99,18 +108,24 @@
     BoardVO.articleList 를 위한 대상 게시글 댓글 목록 조회
   -->
   <select id="selectAllCommentsById" resultMap="boardVOCommentVO">
-    SELECT comment.*
-    FROM article_comment AS comment
-    WHERE article_id = #{article_id}
+    SELECT
+        comment.*
+    FROM
+        article_comment AS comment
+    WHERE
+        article_id = #{article_id}
   </select>
 
   <!--
     BoardVO.articleList 를 위한 대상 게시글 카테고리 이름 조회
   -->
   <select id="selectCategoryNameById" resultType="java.lang.String">
-    SELECT name
-    FROM article_category
-    WHERE article_category_id = #{article_category_id}
+    SELECT
+        name
+    FROM
+        article_category
+    WHERE
+        article_category_id = #{article_category_id}
   </select>
 
   <!--
@@ -118,18 +133,27 @@
   -->
   <select id="selectAllCategories" resultMap="boardVOCategoryVO">
     SELECT
-      *
+        *
     FROM
-      article_category
+        article_category
   </select>
 
   <!--
-    Parameter : articleId
     대상 게시글 조회
+      password 로 인해 * 사용 불가
+    Parameter : articleId
   -->
   <select id="selectArticle" resultMap="boardVOArticleVO" parameterType="integer">
     SELECT
-        category.*, IFNULL(article.last_updated,'-') AS last_updated, article.*
+        category.*,
+        article.article_id,
+        article.title,
+        article.content,
+        article.views,
+        article.writer,
+        article.date_created,
+        article.file_attached,
+        IFNULL(article.last_updated,'-') AS last_updated
     FROM
         article
         LEFT JOIN article_category AS category
@@ -139,46 +163,55 @@
   </select>
 
 
-<!--  &lt;!&ndash;countArticles&ndash;&gt;-->
-<!--  <select id="countArticles" resultType="integer" parameterType="SearchDTO">-->
-<!--    SELECT-->
-<!--        COUNT(*)-->
-<!--    FROM-->
-<!--        article-->
-<!--        LEFT JOIN article_category-->
-<!--        ON article.article_category_id = article_category.article_category_id-->
-<!--    WHERE-->
-<!--        article.article_deleted = 0-->
-<!--        <include refid="searchParameters"></include>-->
-<!--  </select>-->
+  <!--
+    검색 조건 기반 게시글 목록 총 갯수 조회
+  -->
+  <select id="countArticles" resultType="integer" parameterType="com.week4.vo.BoardVO$SearchVO">
+    SELECT
+        COUNT(*)
+    FROM
+        article
+        LEFT JOIN article_category AS category
+        ON article.article_category_id = category.article_category_id
+    WHERE
+        article.article_deleted = 0
+        <include refid="searchParameters"></include>
+  </select>
 
 
-<!--  &lt;!&ndash;insertArticle&ndash;&gt;-->
-<!--  <insert id="insertArticle" parameterType="ArticleVO">-->
-<!--    INSERT INTO-->
-<!--        article (article_category_id, title, content, writer, password)-->
-<!--    VALUES (-->
-<!--        #{categoryId},-->
-<!--        #{title},-->
-<!--        #{content},-->
-<!--        #{writer},-->
-<!--        #{password} )-->
-<!--    <selectKey keyProperty="id" resultType="integer">-->
-<!--    SELECT-->
-<!--        LAST_INSERT_ID()-->
-<!--    </selectKey>-->
-<!--  </insert>-->
+  <!--
+    게시글 삽입(등록) 후 삽입된 게시글 번호 반환
+  -->
+  <insert id="insertArticle" parameterType="com.week4.vo.BoardVO$ArticleVO">
+    INSERT INTO
+        article (article_category_id,
+                 title,
+                 content,
+                 writer,
+                 password)
+    VALUES (#{categoryId},
+            #{title},
+            #{content},
+            #{writer},
+            #{password} )
+    <selectKey keyProperty="id" resultType="integer">
+    SELECT
+        LAST_INSERT_ID()
+    </selectKey>
+  </insert>
 
-<!--  &lt;!&ndash;deleteArticle-->
-<!--      삭제 : article_deleted = 1, 미삭제 : article_deleted = 0 (default)&ndash;&gt;-->
-<!--  <update id="deleteArticle" parameterType="integer">-->
-<!--    UPDATE-->
-<!--        article-->
-<!--    SET-->
-<!--        article_deleted = 1-->
-<!--    WHERE-->
-<!--        article_id = #{value}-->
-<!--  </update>-->
+  <!--
+    deleteArticle
+    삭제 : article_deleted = 1, 미삭제 : article_deleted = 0 (default)
+  -->
+  <update id="deleteArticle" parameterType="integer">
+    UPDATE
+        article
+    SET
+        article_deleted = 1
+    WHERE
+        article_id = #{value}
+  </update>
 
 
 <!--  &lt;!&ndash;updateArticle&ndash;&gt;-->

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,12 +32,19 @@ public class BoardController {
 			.articleList(articleService.getArticleList(validatedSearchVO))
 			.categoryList(articleService.getCategoryList())
 			.searchVO(validatedSearchVO)
+			.numberOfArticles(articleService.getNumberOfArticles(validatedSearchVO))
 			.build();
 		return boardVO;
 	}
 
+	/**
+	 * 프론트에서 JSON 타입의 게시글 정보를 받아 DB 삽입
+	 * @param articleVO JSON 게시글 정보
+	 * @return 게시글 목록
+	 */
 	@PostMapping("articles")
-	public String insertArticle() {
+	public String insertArticle(@RequestBody BoardVO.ArticleVO articleVO) {
+		int result = articleService.registerArticle(articleVO);
 		return "";
 	}
 
@@ -62,6 +70,8 @@ public class BoardController {
 
 	@DeleteMapping("articles/{articleId}")
 	public String deleteArticle(@PathVariable("articleId") int articleId) {
+		int result = articleService.deleteArticle(articleId);
+		System.out.println(result);
 		return "";
 	}
 
