@@ -4,6 +4,7 @@ import com.week4.service.ArticleService;
 import com.week4.util.Validate;
 import com.week4.vo.BoardVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("api/")
 @RequiredArgsConstructor
 public class BoardController {
@@ -91,10 +93,12 @@ public class BoardController {
 	 * @param articleId 대상 게시글 번호
 	 * @return 게시글 목록
 	 */
+	/*
+	articleId가 아닌 비밀번호가 담긴 articleVO를 객체로 받아서 서버 유효성 검증후 삭제 필요
+	 */
 	@DeleteMapping("articles/{articleId}")
 	public String deleteArticle(@PathVariable("articleId") int articleId) {
 		int result = articleService.deleteArticle(articleId);
-		System.out.println(result);
 		return "";
 	}
 

@@ -80,6 +80,9 @@ public class ArticleService {
 	 * @param articleId 대상 게시글 번호
 	 * @return 수행 결과
 	 */
+	/*
+	articleId가 아닌 비밀번호가 담긴 articleVO를 객체로 받아서 서버 유효성 검증후 삭제 필요
+	 */
 	public int deleteArticle(int articleId) {
 		return articleRepository.deleteArticle(articleId);
 	}

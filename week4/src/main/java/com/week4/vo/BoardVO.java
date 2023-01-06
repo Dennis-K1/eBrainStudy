@@ -45,6 +45,7 @@ public class BoardVO {
 	}
 	@Getter
 	@Setter
+	@ToString
 	@NoArgsConstructor
 	public static class ArticleVO {
 
