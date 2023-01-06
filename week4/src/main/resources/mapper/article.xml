@@ -201,8 +201,8 @@
   </insert>
 
   <!--
-    deleteArticle
-    삭제 : article_deleted = 1, 미삭제 : article_deleted = 0 (default)
+    게시글 삭제후 결과 반환
+    삭제 상태: article_deleted = 1, 미삭제 : article_deleted = 0 (default)
   -->
   <update id="deleteArticle" parameterType="integer">
     UPDATE
@@ -213,28 +213,40 @@
         article_id = #{value}
   </update>
 
+  <!--
+    대상 게시글 수정 후 결과 반환
+  -->
+  <update id="updateArticle" parameterType="com.week4.vo.BoardVO$ArticleVO">
+    UPDATE
+        article
+    SET
+        title = #{title},
+        content = #{content},
+        writer = #{writer}
+    WHERE
+        article_id = #{id}
+  </update>
 
-<!--  &lt;!&ndash;updateArticle&ndash;&gt;-->
-<!--  <update id="updateArticle" parameterType="ArticleVO">-->
-<!--    UPDATE-->
-<!--        article-->
-<!--    SET-->
-<!--        title = #{title},-->
-<!--        content = #{content},-->
-<!--        writer = #{writer}-->
-<!--    WHERE-->
-<!--        article_id = #{id}-->
-<!--  </update>-->
+  <!--
+    게시글 조회시 조회수 증가
+  -->
+  <update id="increaseViews" parameterType="integer">
+    UPDATE
+        article
+    SET
+        views = views + 1
+    WHERE
+        article_id = #{value}
+  </update>
 
-<!--  &lt;!&ndash;increaseViews&ndash;&gt;-->
-<!--  <update id="increaseViews" parameterType="integer">-->
-<!--    UPDATE-->
-<!--        article-->
-<!--    SET-->
-<!--        views = views + 1-->
-<!--    WHERE-->
-<!--        article_id = #{value}-->
-<!--  </update>-->
+
+  <insert id="insertComment" parameterType="com.week4.vo.BoardVO$CommentVO">
+    INSERT INTO
+      article_comment (article_id, content)
+    VALUES (
+             #{articleId},
+             #{content} )
+  </insert>
 
 <!--  &lt;!&ndash;updateFileStatus&ndash;&gt;-->
 <!--  <update id="updateFileStatus" parameterType="map">-->

@@ -1,13 +1,15 @@
 package com.week4.repository;
 
 import com.week4.vo.BoardVO;
+import com.week4.vo.BoardVO.ArticleVO;
+import com.week4.vo.BoardVO.CommentVO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 /**
- * 게시글 테이블 접근을 위한 @Repository
+ * 게시글 도메인 테이블 (article, article_comment, article_category) 접근을 위한 @Repository
  */
 @Repository
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ public class ArticleRepository {
 
 	/**
 	 * 대상 게시글 1개 조회
+	 *
 	 * @param articleId 대상 게시글 번호
 	 * @return 게시글 객체
 	 */
@@ -27,17 +30,29 @@ public class ArticleRepository {
 		return sqlSession.selectOne("mapper.article.selectArticle",articleId);
 	}
 
+	/**
+	 * 검색 조건 기반 게시글 목록 반환 (PAGE_SIZE 만큼)
+	 *
+	 * @param validatedSearchVO 유효성 검증한 검색 조건
+	 * @return 게시글 목록
+	 */
 	public List<BoardVO.ArticleVO> getArticleList(BoardVO.SearchVO validatedSearchVO) {
 		return sqlSession.selectList("mapper.article.selectAllArticles", validatedSearchVO);
 	}
 
+	/**
+	 * 전체 카테고리 반환
+	 *
+	 * @return 카테고리 목록
+	 */
 	public List<BoardVO.CategoryVO> getCategoryList() {
 		return sqlSession.selectList("mapper.article.selectAllCategories");
 	}
 
 	/**
-	 * 검색 대상 총 게시글 수 조회
-	 * @param validatedSearchVO 유효성 검증한 유저 검색값 객체
+	 * 검색 조건 기반 총 게시글 수 조회
+	 *
+	 * @param validatedSearchVO 유효성 검증한 검색 조건
 	 * @return 검색 대상 게시글 수
 	 */
 	public int getNumberOfArticles(BoardVO.SearchVO validatedSearchVO) {
@@ -45,7 +60,8 @@ public class ArticleRepository {
 	}
 
 	/**
-	 * 게시글 정보 DB 삽입
+	 * 게시글 등록(삽입)
+	 *
 	 * @param articleVO 대상 게시글 객체
 	 * @return 수행 결과
 	 */
@@ -54,7 +70,8 @@ public class ArticleRepository {
 	}
 
 	/**
-	 * 대상 게시글 DB 삭제
+	 * 게시글 삭제
+	 *
 	 * @param articleId 대상 게시글 번호
 	 * @return 수행 결과
 	 */
@@ -62,23 +79,35 @@ public class ArticleRepository {
 		return sqlSession.update("mapper.article.deleteArticle", articleId);
 	}
 
-//	/**
-//	 * 대상 게시글 수정
-//	 * @param articleVO 대상 게시글 정보 객체 (번호 포함)
-//	 * @return 수행 결과
-//	 */
-//	public int updateArticle(ArticleVO articleVO){
-//		return sqlSession.update("mapper.article.updateArticle", articleVO);
-//	}
-//
-//	/**
-//	 * 조회 대상 게시글 조회수 증가
-//	 * @param articleId 대상 게시글 번호
-//	 */
-//	public void increaseViews (int articleId) {
-//		sqlSession.update("mapper.article.increaseViews", articleId);
-//	}
-//
+	/**
+	 * 게시글 수정
+	 *
+	 * @param articleVO 대상 게시글 정보
+	 * @return 수행 결과
+	 */
+	public int updateArticle(ArticleVO articleVO){
+		return sqlSession.update("mapper.article.updateArticle", articleVO);
+	}
+
+	/**
+	 * 조회 대상 게시글 조회수 증가
+	 *
+	 * @param articleId 대상 게시글 번호
+	 */
+	public void increaseViews (int articleId) {
+		sqlSession.update("mapper.article.increaseViews", articleId);
+	}
+
+	/**
+	 * 댓글 등록 (삽입)
+	 * 
+	 * @param commentVO 대상 게시글 번호 및 댓글 내용
+	 * @return 수행 결과
+	 */
+	public int insertComment(CommentVO commentVO) {
+		return sqlSession.insert("mapper.article.insertComment", commentVO);
+	}
+
 //	/**
 //	 * 게시글 파일 첨부 상태 업데이트
 //	 * @param articleFileStatus 대상 게시글 정보 ("articleId"  : 게시글 번호,
