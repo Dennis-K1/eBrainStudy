@@ -3,6 +3,9 @@ package com.week4.controller;
 import com.week4.service.ArticleService;
 import com.week4.util.Validate;
 import com.week4.vo.BoardVO;
+import com.week4.vo.BoardVO.ArticleVO;
+import com.week4.vo.BoardVO.CommentVO;
+import com.week4.vo.BoardVO.SearchVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,8 +35,8 @@ public class BoardController {
 	 * @return 게시글 목록 (댓글 및 카테고리 정보 포함), 카테고리 목록
 	 */
 	@GetMapping("articles")
-	public BoardVO getBoardVO(BoardVO.SearchVO searchVO) {
-		BoardVO.SearchVO validatedSearchVO = Validate.validateSearchVO(searchVO);
+	public BoardVO getBoardVO(SearchVO searchVO) {
+		SearchVO validatedSearchVO = Validate.validateSearchVO(searchVO);
 		BoardVO boardVO = BoardVO.builder()
 			.articleList(articleService.getArticleList(validatedSearchVO))
 			.categoryList(articleService.getCategoryList())
@@ -50,7 +53,7 @@ public class BoardController {
 	 * @return 게시글 목록
 	 */
 	@PostMapping("articles")
-	public String insertArticle(@RequestBody BoardVO.ArticleVO articleVO) {
+	public String insertArticle(@RequestBody ArticleVO articleVO) {
 		int result = articleService.registerArticle(articleVO);
 		return "";
 	}
@@ -82,7 +85,7 @@ public class BoardController {
 	 * @return 수정된 게시글
 	 */
 	@PutMapping("articles")
-	public String updateArticle(@RequestBody BoardVO.ArticleVO articleVO) {
+	public String updateArticle(@RequestBody ArticleVO articleVO) {
 		int result = articleService.updateArticle(articleVO);
 		return "";
 	}
@@ -90,15 +93,16 @@ public class BoardController {
 	/**
 	 * 대상 게시글 삭제
 	 *
-	 * @param articleId 대상 게시글 번호
+	 * @param articleVO 대상 게시글 번호 및 유효성 검사를 위한 정보가 담긴 게시글 객체
 	 * @return 게시글 목록
 	 */
 	/*
 	articleId가 아닌 비밀번호가 담긴 articleVO를 객체로 받아서 서버 유효성 검증후 삭제 필요
 	 */
-	@DeleteMapping("articles/{articleId}")
-	public String deleteArticle(@PathVariable("articleId") int articleId) {
-		int result = articleService.deleteArticle(articleId);
+	@DeleteMapping("articles")
+	public String deleteArticle(@RequestBody ArticleVO articleVO) {
+		System.out.println(articleVO.toString());
+		int result = articleService.deleteArticle(articleVO);
 		return "";
 	}
 
@@ -109,7 +113,7 @@ public class BoardController {
 	 * @return 수행 결과
 	 */
 	@PostMapping("articles/comment")
-	public String insertComment(@RequestBody BoardVO.CommentVO commentVO) {
+	public String insertComment(@RequestBody CommentVO commentVO) {
 		int result = articleService.registerComment(commentVO);
 		return "";
 	}

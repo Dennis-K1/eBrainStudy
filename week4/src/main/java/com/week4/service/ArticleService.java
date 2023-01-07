@@ -5,6 +5,7 @@ import com.week4.repository.FileRepository;
 import com.week4.vo.BoardVO;
 import com.week4.vo.BoardVO.ArticleVO;
 import com.week4.vo.BoardVO.CommentVO;
+import com.week4.vo.BoardVO.SearchVO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class ArticleService {
 	 * @param validatedSearchVO 유효성 검증한 검색 조건
 	 * @return 목록 내 게시글 정보 및 댓글 목록
 	 */
-	public List<BoardVO.ArticleVO> getArticleList(BoardVO.SearchVO validatedSearchVO) {
+	public List<BoardVO.ArticleVO> getArticleList(SearchVO validatedSearchVO) {
 		return articleRepository.getArticleList(validatedSearchVO);
 	}
 
@@ -60,7 +61,7 @@ public class ArticleService {
 	 * @param validatedSearchVO 유효성 검증한 검색 조건
 	 * @return 게시글 수
 	 */
-	public int getNumberOfArticles(BoardVO.SearchVO validatedSearchVO) {
+	public int getNumberOfArticles(SearchVO validatedSearchVO) {
 		return articleRepository.getNumberOfArticles(validatedSearchVO);
 	}
 
@@ -70,7 +71,7 @@ public class ArticleService {
 	 * @param articleVO 등록할 게시글 정조 객체
 	 * @return 등록한 게시글 번호
 	 */
-	public int registerArticle(BoardVO.ArticleVO articleVO) {
+	public int registerArticle(ArticleVO articleVO) {
 		return articleRepository.registerArticle(articleVO);
 	}
 
@@ -83,7 +84,9 @@ public class ArticleService {
 	/*
 	articleId가 아닌 비밀번호가 담긴 articleVO를 객체로 받아서 서버 유효성 검증후 삭제 필요
 	 */
-	public int deleteArticle(int articleId) {
+	public int deleteArticle(ArticleVO articleVO) {
+		int articleId = articleVO.getId();
+		//validatePassword
 		return articleRepository.deleteArticle(articleId);
 	}
 

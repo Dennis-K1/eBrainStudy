@@ -3,6 +3,7 @@ package com.week4.repository;
 import com.week4.vo.BoardVO;
 import com.week4.vo.BoardVO.ArticleVO;
 import com.week4.vo.BoardVO.CommentVO;
+import com.week4.vo.BoardVO.SearchVO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
@@ -36,7 +37,7 @@ public class ArticleRepository {
 	 * @param validatedSearchVO 유효성 검증한 검색 조건
 	 * @return 게시글 목록
 	 */
-	public List<BoardVO.ArticleVO> getArticleList(BoardVO.SearchVO validatedSearchVO) {
+	public List<BoardVO.ArticleVO> getArticleList(SearchVO validatedSearchVO) {
 		return sqlSession.selectList("mapper.article.selectAllArticles", validatedSearchVO);
 	}
 
@@ -55,7 +56,7 @@ public class ArticleRepository {
 	 * @param validatedSearchVO 유효성 검증한 검색 조건
 	 * @return 검색 대상 게시글 수
 	 */
-	public int getNumberOfArticles(BoardVO.SearchVO validatedSearchVO) {
+	public int getNumberOfArticles(SearchVO validatedSearchVO) {
 		return sqlSession.selectOne("mapper.article.countArticles", validatedSearchVO);
 	}
 
@@ -65,7 +66,7 @@ public class ArticleRepository {
 	 * @param articleVO 대상 게시글 객체
 	 * @return 수행 결과
 	 */
-	public int registerArticle(BoardVO.ArticleVO articleVO){
+	public int registerArticle(ArticleVO articleVO){
 		return sqlSession.insert("mapper.article.insertArticle", articleVO);
 	}
 
