@@ -1,22 +1,30 @@
-import { createWebHistory, createRouter } from "vue-router";
+import {createWebHistory, createRouter} from "vue-router";
 
-import ArticleList from "@/components/ArticleList";
+import ArticleDetail from "@/components/ArticleDetail";
+import ArticleBoard from "@/components/ArticleBoard.vue";
 
 
 const routes = [
-  { path : '/articles',
-    name : 'articles',
-    component : ArticleList,
-    beforeEach : function (to,from) {
-      console.log(to)
-      console.log(from)
-    }
-  }
+    {
+        path: '/',
+        name: 'home',
+        redirect: 'articles'
+    },
+    {
+        path: '/articles',
+        name: 'articleBoard',
+        component: ArticleBoard,
+    },
+    {
+        path: '/articles/:id',
+        name: 'articleDetail',
+        component: ArticleDetail
+    },
 ]
 
 const router = createRouter({
-  history : createWebHistory(),
-  routes : routes
+    history: createWebHistory(),
+    routes: routes
 });
 
 export default router;
