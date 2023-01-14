@@ -20,7 +20,13 @@
     <span>작성자</span><span style="padding: 30px">{{ article.writer }}</span> <br>
     <span>제목</span><span style="padding: 30px">{{ article.title }}</span> <br>
     <span>내용</span><span style="padding: 30px">{{ article.content }}</span> <br>
-    <span>파일</span><span style="padding: 30px">{{ article.fileAttached }}</span> <br>
+    <br>
+    <template v-if="article.fileInformationList != null">
+      <button @click="downloadFile(fileVO)" type="button" class="fileButton"
+              v-for="(fileVO,index) in article.fileInformationList" :key="index">
+        {{ fileVO.originalName }}
+      </button>
+    </template>
     <h1>
       댓글
     </h1>
@@ -38,20 +44,35 @@
   </template>
 
   <template v-if="pageStatus=='articleEditForm'">
-    <span>카테고리</span><span style="padding: 30px">{{ article.categoryName }}</span> <br>
-    <span>등록 일시</span><span style="padding: 30px">{{ article.dateCreated }}</span> <br>
-    <span>수정 일시</span><span style="padding: 30px">{{ article.lastUpdated }}</span> <br>
-    <span>조회수</span><span style="padding: 30px">{{ article.views }}</span> <br>
-    <span>비밀번호</span><span style="color: red">*</span><input type="password"
-                                                             v-model="articleEditForm.userInputPassword">
-    <br>
-    <span>작성자</span><span style="color: red">*</span><input type="text"
-                                                            v-model="articleEditForm.writer"> <br>
-    <span>제목</span><span style="color: red">*</span><input v-model="articleEditForm.title"><br>
-    <span>내용</span><span style="color: red">*</span><input v-model="articleEditForm.content"><br>
-    <span>파일</span><span style="padding: 30px">{{ article.fileAttached }}</span> <br>
-    <button @click="closeEditForm">취소</button>
-    <button @click="updateArticle">저장</button>
+    <form>
+      <span>카테고리</span><span style="padding: 30px">{{ article.categoryName }}</span> <br>
+      <span>등록 일시</span><span style="padding: 30px">{{ article.dateCreated }}</span> <br>
+      <span>수정 일시</span><span style="padding: 30px">{{ article.lastUpdated }}</span> <br>
+      <span>조회수</span><span style="padding: 30px">{{ article.views }}</span> <br>
+      <span>비밀번호</span><span style="color: red">*</span><input type="password"
+                                                               v-model="articleEditForm.userInputPassword">
+      <br>
+      <span>작성자</span><span style="color: red">*</span><input type="text"
+                                                              v-model="articleEditForm.writer"> <br>
+      <span>제목</span><span style="color: red">*</span><input v-model="articleEditForm.title"><br>
+      <span>내용</span><span style="color: red">*</span><input v-model="articleEditForm.content"><br>
+      <template v-if="article.fileInformationList != null">
+        <div v-for="(fileVO,index) in article.fileInformationList" :key="index">
+          <span>{{ fileVO.originalName }}</span>
+          <button @click="downloadFile(fileVO)" type="button">
+            Download
+          </button>
+          <button @click="deleteFileFromList(index, fileVO)" type="button">
+            X
+          </button>
+        </div>
+        <div v-for="(fileIndex) in numberOfNewFileInput" :key="fileIndex">
+          <input type="file" ref="file" @change="selectFile(fileIndex-1)">
+        </div>
+      </template>
+      <button @click="closeEditForm">취소</button>
+      <button @click="updateArticle">저장</button>
+    </form>
   </template>
 </template>
 
@@ -83,6 +104,8 @@ export default {
        */
       articleEditForm: {
         userInputPassword: '',
+        fileList:[],
+        deletedFileList:[],
       },
       /**
        * 페이지 표시 상태 ( 'articleDetail' : 게시글 상세페이지, 'articleEditForm' : 게시글 수정페이지)
@@ -104,7 +127,14 @@ export default {
       commentContent: ''
     }
   },
-
+  computed:{
+    /**
+     * 총 3개의 파일 업로드 영역 중 아직 업로드가 안 됐거나 숨김 처리 된 파일 업로드 영역 갯수
+     */
+    numberOfNewFileInput(){
+      return 3 - this.article.fileInformationList.length;
+    }
+  },
   /**
    * 진입시 uri 에 있는 게시글 번호를 통해 게시글 정보 조회
    */
@@ -113,6 +143,29 @@ export default {
     this.getArticleDetail(this.articleId)
   },
   methods: {
+    /**
+     * 파일 select 시 게시글 객체에 파일 정보 저장
+     */
+    selectFile(fileIndex){
+      this.articleEditForm.fileList.push(this.$refs.file[fileIndex].files[0])
+    },
+    /**
+     * 대상 파일 목록에서 숨기기 (숨긴 상태로 저장 시 삭제, 취소 시 원상복귀)
+     * 삭제된 파일 객체는 fileInformationList 에 따로 저장하여 서버에서 삭제 처리
+     */
+    deleteFileFromList(index, fileVO) {
+      this.articleEditForm.deletedFileList.push(fileVO.id)
+      let fileInformationList = this.article.fileInformationList.filter(
+          (fileVO, order) => order != index)
+      this.article.fileInformationList = fileInformationList;
+    },
+    /**
+     * 대상 파일 다운로드
+     * @param fileVO
+     */
+    downloadFile(fileVO) {
+      boardAPI.downloadFile(fileVO)
+    },
     /**
      * 수정 페이지에서 '저장' 버튼 클릭시 실행
      * 유저 입력 비밀번호 인증 후, 결과에 따라 게시글 수정
@@ -203,6 +256,7 @@ export default {
     getArticleDetail(articleId) {
       boardAPI.getArticle(articleId).then((response) => {
         if (response == false) {
+          alert('존재하지 않는 게시글입니다.')
           window.location.replace("/")
         }
         this.article = response.data
@@ -267,4 +321,11 @@ export default {
 
 <style scoped>
 
+.fileButton {
+  background-color: white;
+  border: none;
+  text-decoration: underline;
+  font-size: 16px;
+  cursor: pointer;
+}
 </style>

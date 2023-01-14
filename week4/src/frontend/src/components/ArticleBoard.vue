@@ -55,6 +55,10 @@
       <button type="button" @click="toPageOf(endPage)" class="pageButton">&gt;&gt;</button>
     </template>
   </div>
+
+  <a href="/articles/form">
+    <button>등록</button>
+  </a>
 </template>
 
 <script>

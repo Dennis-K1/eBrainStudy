@@ -63,7 +63,7 @@
         <bind name="keyword" value="'%' + keyword + '%'" />
         and article.title LIKE #{keyword}
       </if>
-      <if test="categoryId != null">
+      <if test="categoryId != null and(categoryId != 0)">
         and category.article_category_id LIKE #{categoryId}
       </if>
     </trim>
@@ -153,6 +153,7 @@
         article.writer,
         article.date_created,
         article.file_attached,
+        article.article_deleted,
         IFNULL(article.last_updated,'-') AS last_updated
     FROM
         article
@@ -160,6 +161,15 @@
         ON article.article_category_id = category.article_category_id
     WHERE
         article_id = #{value}
+  </select>
+
+  <select id="selectArticlePassword" resultType="String" parameterType="integer">
+    SELECT
+      article.password
+    FROM
+      article
+    WHERE
+      article_id = #{value}
   </select>
 
 
@@ -240,6 +250,9 @@
   </update>
 
 
+  <!--
+    게시글 댓글 삽입
+  -->
   <insert id="insertComment" parameterType="com.week4.vo.BoardVO$CommentVO">
     INSERT INTO
       article_comment (article_id, content)
@@ -248,14 +261,16 @@
              #{content} )
   </insert>
 
-<!--  &lt;!&ndash;updateFileStatus&ndash;&gt;-->
-<!--  <update id="updateFileStatus" parameterType="map">-->
-<!--    UPDATE-->
-<!--        article-->
-<!--    SET-->
-<!--        file_attached = #{fileStatus}-->
-<!--    WHERE-->
-<!--        article_id = #{articleId}-->
-<!--  </update>-->
+  <!--
+    게시글 파일 첨부여부 업데이트
+  -->
+  <update id="updateFileStatus" parameterType="map">
+    UPDATE
+        article
+    SET
+        file_attached = #{fileStatus}
+    WHERE
+        article_id = #{articleId}
+  </update>
 
 </mapper>

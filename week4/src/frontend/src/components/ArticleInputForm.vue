@@ -51,14 +51,9 @@
           <textarea v-model="article.content" name="content"></textarea>
         </td>
       </tr>
-      <tr>
+      <tr v-for="(fileIndex) in this.numberOfFiles" :key="fileIndex">
         <td>
-          <input type="file" name="fileList">
-        </td>
-        <td>
-          <div>
-            <p>                               </p>
-          </div>
+          <input type="file" ref="file" @change="selectFile(fileIndex-1)">
         </td>
       </tr>
     </table>
@@ -74,10 +69,12 @@ export default {
   name: "ArticleInput",
   data(){
     return{
+      numberOfFiles:3,
       /**
        * 게시글 정보가 담길 객체
        */
       article:{
+        fileList:[],
       },
       /**
        * 카테고리 옵션 선택값이 담길 객체
@@ -86,6 +83,12 @@ export default {
     }
   },
   methods:{
+    /**
+     * 파일 select 시 게시글 객체에 파일 정보 저장
+     */
+    selectFile(fileIndex){
+      this.article.fileList.push(this.$refs.file[fileIndex].files[0])
+    },
     /**
      * 카테고리 리스트 반환
      */

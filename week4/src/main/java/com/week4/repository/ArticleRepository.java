@@ -4,6 +4,7 @@ import com.week4.vo.BoardVO;
 import com.week4.vo.BoardVO.ArticleVO;
 import com.week4.vo.BoardVO.CommentVO;
 import com.week4.vo.BoardVO.SearchVO;
+import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
@@ -109,13 +110,11 @@ public class ArticleRepository {
 		return sqlSession.insert("mapper.article.insertComment", commentVO);
 	}
 
-//	/**
-//	 * 게시글 파일 첨부 상태 업데이트
-//	 * @param articleFileStatus 대상 게시글 정보 ("articleId"  : 게시글 번호,
-//	 * 											"fileStatus" : 파일 첨부 상태)
-//	 */
-//	public void updateFileStatus (HashMap articleFileStatus) {
-//		sqlSession.update("mapper.article.updateFileStatus", articleFileStatus);
-//
-//	}
+	public String getArticlePassword(int articleId) {
+		return sqlSession.selectOne("mapper.article.selectArticlePassword",articleId);
+	}
+
+	public void updateFileStatus(HashMap<String, Integer> articleFileStatus) {
+		sqlSession.update("mapper.article.updateFileStatus", articleFileStatus);
+	}
 }

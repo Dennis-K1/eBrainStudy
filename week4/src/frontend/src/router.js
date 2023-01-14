@@ -2,7 +2,8 @@ import {createWebHistory, createRouter} from "vue-router";
 
 import ArticleDetail from "@/components/ArticleDetail";
 import ArticleBoard from "@/components/ArticleBoard.vue";
-
+import ArticleInputForm from "@/components/ArticleInputForm";
+import FileUploadTest from "@/components/FileUploadTest";
 
 const routes = [
     {
@@ -19,6 +20,11 @@ const routes = [
         path: '/articles/:id',
         name: 'articleDetail',
         component: ArticleDetail
+    },
+    {
+        path: '/articles/form',
+        name: 'articleInputForm',
+        component: ArticleInputForm
     },
 ]
 

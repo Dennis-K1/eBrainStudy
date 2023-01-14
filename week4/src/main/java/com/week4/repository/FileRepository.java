@@ -1,6 +1,7 @@
 package com.week4.repository;
 
-import com.week3.vo.FileVO;
+import com.week4.vo.FileVO;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,15 @@ public class FileRepository {
 	 * 데이터베이스 연결 세션
 	 */
 	private final SqlSession sqlSession;
+
+	/**
+	 * 대상 게시글 파일 조회
+	 * @param articleId 조회 대상 게시글 번호
+	 * @return 수행 결과
+	 */
+	public List<FileVO> getArticleFileList (int articleId){
+		return sqlSession.selectList("mapper.file.selectArticleFiles", articleId);
+	}
 
 	/**
 	 * 파일 DB에 삽입
@@ -30,6 +40,17 @@ public class FileRepository {
 	 */
 	public int countArticleFiles(int articleId) {
 		return sqlSession.selectOne("mapper.file.countArticleFiles", articleId);
+	}
 
+	/**
+	 * 파일 삭제
+	 * @param fileId 대상 파일 번호
+	 */
+	public int deleteFile(int fileId) {
+		return sqlSession.delete("mapper.file.deleteFile", fileId);
+	}
+
+	public FileVO getFile(Integer fileId) {
+		return sqlSession.selectOne("mapper.file.selectFile", fileId);
 	}
 }

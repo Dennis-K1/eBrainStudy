@@ -68,25 +68,23 @@ public class ArticleService {
 	/**
 	 * 게시글 등록(삽입)
 	 * 
-	 * @param articleVO 등록할 게시글 정조 객체
+	 * @param articleVO 등록할 게시글 정보 객체
 	 * @return 등록한 게시글 번호
 	 */
 	public int registerArticle(ArticleVO articleVO) {
-		return articleRepository.registerArticle(articleVO);
+		articleRepository.registerArticle(articleVO);
+		return articleVO.getId();
 	}
 
 	/**
 	 * 게시글 삭제
 	 * 
-	 * @param articleId 대상 게시글 번호
+	 * @param articleVO 대상 게시글 번호와 유저입력 비밀번호가 담긴 객체
 	 * @return 수행 결과
 	 */
-	/*
-	articleId가 아닌 비밀번호가 담긴 articleVO를 객체로 받아서 서버 유효성 검증후 삭제 필요
-	 */
+	//TODO 비밀번호 유효성
 	public int deleteArticle(ArticleVO articleVO) {
 		int articleId = articleVO.getId();
-		//validatePassword
 		return articleRepository.deleteArticle(articleId);
 	}
 
@@ -108,5 +106,13 @@ public class ArticleService {
 	 */
 	public int registerComment(CommentVO commentVO) {
 		return articleRepository.insertComment(commentVO);
+	}
+
+	public Boolean isArticlePasswordCorrect(ArticleVO articleVO) {
+		String articlePassword = articleRepository.getArticlePassword(articleVO.getId());
+		if ((articlePassword).equals(articleVO.getPassword())){
+			return true;
+		}
+		return false;
 	}
 }

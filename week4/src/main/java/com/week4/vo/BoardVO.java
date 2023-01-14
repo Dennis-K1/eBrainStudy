@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @NoArgsConstructor
@@ -116,6 +117,21 @@ public class BoardVO {
 		 */
 		private List<CommentVO> commentList;
 
+		/**
+		 * 파일 목록
+		 */
+		private List<MultipartFile> fileList;
+
+		/**
+		 * DB에 저장된 파일 정보 목록
+		 */
+		private List<FileVO> fileInformationList;
+
+		/**
+		 * 프론트에서 삭제 요청된 파일 id 목록
+		 */
+		private List<Integer> deletedFileList;
+
 	}
 
 	@Getter
@@ -210,7 +226,7 @@ public class BoardVO {
 		 * @param pageNumber 현재 페이지 번호
 		 */
 		public void setFirstArticleIndex(int pageNumber) {
-			if (pageNumber == 0) {
+			if (pageNumber == 1) {
 				return;
 			}
 			this.firstArticleIndex = this.PAGE_SIZE * (pageNumber - 1);

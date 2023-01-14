@@ -4,31 +4,48 @@
 
 <mapper namespace="mapper.file">
 
-  <resultMap id="file_vo" type="FileVO">
+  <resultMap id="fileVO" type="FileVO">
     <result property="id" column="file_id" />
     <result property="articleId" column="article_id" />
     <result property="saveName" column="save_name" />
     <result property="originalName" column="original_name" />
-    <result property="path" column="path" />
+    <result property="directory" column="directory" />
     <result property="extension" column="extension" />
   </resultMap>
 
+  <!--
+    게시글 파일 정보 조회
+  -->
+  <select id="selectArticleFiles" resultMap="fileVO" parameterType="integer">
+    SELECT
+      *
+    FROM
+      file
+    WHERE
+      article_id = #{value}
+  </select>
+
+  <!--
+    파일 정보 삽입
+  -->
   <insert id="insertFile" parameterType="FileVO">
     INSERT INTO file (
           article_id,
           save_name,
           original_name,
-          path,
+          directory,
           extension)
     VALUES (
          #{articleId},
          #{saveName},
          #{originalName},
-         #{path},
+         #{directory},
          #{extension} )
   </insert>
 
-  <!--countArticles-->
+  <!--
+    countArticles
+  -->
   <select id="countArticleFiles" resultType="integer" parameterType="integer">
     SELECT
         COUNT(*)
@@ -36,6 +53,28 @@
         file
     WHERE
         article_id = #{value}
+  </select>
+
+  <!--
+    파일 삭제
+  -->
+  <delete id="deleteFile" parameterType="integer">
+    DELETE FROM
+               file
+    WHERE
+        file_id = #{value}
+  </delete>
+
+  <!--
+  파일 조회
+-->
+  <select id="selectFile" resultMap="fileVO" parameterType="integer">
+    SELECT
+      *
+    FROM
+      file
+    WHERE
+      file_id = #{value}
   </select>
 
 </mapper>
