@@ -1,5 +1,7 @@
 package com.week4.service;
 
+import static com.week4.util.Validate.validateArticleInput;
+
 import com.week4.repository.ArticleRepository;
 import com.week4.repository.FileRepository;
 import com.week4.vo.BoardVO;
@@ -72,6 +74,9 @@ public class ArticleService {
 	 * @return 등록한 게시글 번호
 	 */
 	public int registerArticle(ArticleVO articleVO) {
+		if(validateArticleInput(articleVO) == -1){
+			return -1;
+		}
 		articleRepository.registerArticle(articleVO);
 		return articleVO.getId();
 	}
@@ -108,6 +113,11 @@ public class ArticleService {
 		return articleRepository.insertComment(commentVO);
 	}
 
+	/**
+	 * 유저 입력 비밀번호 인증
+	 *
+	 * @param articleVO 대상 게시글 번호와 유저 입력 비밀번호가 담긴 객체
+	 */
 	public Boolean isArticlePasswordCorrect(ArticleVO articleVO) {
 		String articlePassword = articleRepository.getArticlePassword(articleVO.getId());
 		if ((articlePassword).equals(articleVO.getPassword())){

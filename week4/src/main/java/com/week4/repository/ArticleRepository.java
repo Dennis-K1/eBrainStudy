@@ -110,10 +110,19 @@ public class ArticleRepository {
 		return sqlSession.insert("mapper.article.insertComment", commentVO);
 	}
 
+	/**
+	 * 게시글 비밀번호 조회
+	 * 
+	 * @param articleId 대상 게시글 번호
+	 */
 	public String getArticlePassword(int articleId) {
 		return sqlSession.selectOne("mapper.article.selectArticlePassword",articleId);
 	}
 
+	/**
+	 * 게시글 파일 첨부 상태 갱신
+	 * @param articleFileStatus 첨부 상태
+	 */
 	public void updateFileStatus(HashMap<String, Integer> articleFileStatus) {
 		sqlSession.update("mapper.article.updateFileStatus", articleFileStatus);
 	}

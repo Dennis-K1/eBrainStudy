@@ -13,7 +13,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import javax.servlet.http.HttpServletResponse;
@@ -27,17 +26,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-/*
-api 버전
- */
+
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", exposedHeaders = {"Content-Disposition"})
-@RequestMapping("api/")
+@RequestMapping("api/v1/")
 @RequiredArgsConstructor
 public class BoardController {
 
@@ -88,11 +83,14 @@ public class BoardController {
 	@PostMapping("articles")
 	public String insertArticle(ArticleVO articleVO) throws IOException {
 		int articleId = articleService.registerArticle(articleVO);
+		if (articleId == -1){
+			return "validationError";
+		}
 		List<MultipartFile> fileList = articleVO.getFileList();
 		if (!Objects.equals(fileList, null)) {
 			fileService.uploadFiles(fileList, articleId);
 		}
-		return "";
+		return "registerSuccess";
 	}
 
 	/**
@@ -128,7 +126,7 @@ public class BoardController {
 		if (!Objects.equals(fileList, null)) {
 			fileService.uploadFiles(fileList, articleVO.getId());
 		}
-		return "";
+		return "updateSuccess";
 	}
 
 	/**
@@ -137,13 +135,9 @@ public class BoardController {
 	 * @param articleVO 대상 게시글 번호 및 유효성 검사를 위한 정보가 담긴 게시글 객체
 	 * @return 게시글 목록
 	 */
-	/*
-	TODO articleId가 아닌 비밀번호가 담긴 articleVO를 객체로 받아서 서버 유효성 검증후 삭제 필요
-	 */
 	@DeleteMapping("articles")
-	public String deleteArticle(@RequestBody ArticleVO articleVO) {
-		int result = articleService.deleteArticle(articleVO);
-		return "";
+	public int deleteArticle(@RequestBody ArticleVO articleVO) {
+		return articleService.deleteArticle(articleVO);
 	}
 
 	/**
@@ -153,13 +147,14 @@ public class BoardController {
 	 * @return 수행 결과
 	 */
 	@PostMapping("articles/comment")
-	public String insertComment(@RequestBody CommentVO commentVO) {
-		int result = articleService.registerComment(commentVO);
-		return "";
+	public int insertComment(@RequestBody CommentVO commentVO) {
+		return articleService.registerComment(commentVO);
 	}
 
-	/*
-	신규 API
+	/**
+	 * 파일 다운로드
+	 *
+	 * @param fileVO 다운 받을 파일 정보 객체
 	 */
 	@PostMapping("articles/file")
 	public void getFile(@RequestBody FileVO fileVO, HttpServletResponse response) throws Exception {

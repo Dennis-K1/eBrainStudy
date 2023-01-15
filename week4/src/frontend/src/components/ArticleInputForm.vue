@@ -7,7 +7,7 @@
           <span style="color: red">*</span>
         </td>
         <td>
-          <select v-model="article.categoryId">
+          <select ref="category" v-model="article.categoryId">
             <option disabled value="">카테고리 선택</option>
             <option v-for="(category,index) in categoryList" :key="index" :value="category.id">{{ category.name }}
             </option>
@@ -20,7 +20,7 @@
           <span style="color: red">*</span>
         </td>
         <td>
-          <input v-model="article.writer" type="text" name="writer" autocomplete="username">
+          <input ref="writer" v-model="article.writer" type="text" name="writer" autocomplete="username">
         </td>
       </tr>
       <tr>
@@ -29,8 +29,8 @@
           <span style="color: red">*</span>
         </td>
         <td>
-          <input v-model="article.password" type="password" name="password" autocomplete="new-password" placeholder="비밀번호">
-          <input type="password" name="passwordValidation" autocomplete="new-password" placeholder="비밀번호 확인">
+          <input ref="password" v-model="article.password" type="password" name="password" autocomplete="new-password" placeholder="비밀번호">
+          <input ref="passwordValidation" type="password" name="passwordValidation" autocomplete="new-password" placeholder="비밀번호 확인">
         </td>
       </tr>
       <tr>
@@ -39,7 +39,7 @@
           <span style="color: red">*</span>
         </td>
         <td>
-          <input v-model="article.title" type="text" name="title">
+          <input ref="title" v-model="article.title" type="text" name="title">
         </td>
       </tr>
       <tr>
@@ -48,7 +48,7 @@
           <span style="color: red">*</span>
         </td>
         <td>
-          <textarea v-model="article.content" name="content"></textarea>
+          <textarea ref="content" v-model="article.content" name="content"></textarea>
         </td>
       </tr>
       <tr v-for="(fileIndex) in this.numberOfFiles" :key="fileIndex">
@@ -64,6 +64,7 @@
 
 <script>
 import boardAPI from "@/boardAPI";
+import util from "@/util";
 
 export default {
   name: "ArticleInput",
@@ -74,6 +75,11 @@ export default {
        * 게시글 정보가 담길 객체
        */
       article:{
+        categoryId:'',
+        writer:'',
+        password:'',
+        title:'',
+        content:'',
         fileList:[],
       },
       /**
@@ -96,11 +102,20 @@ export default {
       boardAPI.getBoardVO(null).then((response) => {
         this.categoryList = response.data.categoryList})
     },
+
     /**
      * 게시글 등록
+     *
+     * 입력값 서버 유효성 검증 실패시 alert 와 함께 목록 페이지로 전환
      */
     registerArticle(){
-      boardAPI.insertArticle(this.article);
+      util.validateArticleInput(this.article,this.$refs);
+      boardAPI.insertArticle(this.article).then((response) => {
+        if (response.data === 'validationError'){
+          alert('입력값에 오류가 있습니다.')
+          window.location.replace("/")
+        }
+      });
       window.location.replace("/")
     }
   },

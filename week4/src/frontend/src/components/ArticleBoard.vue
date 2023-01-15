@@ -131,9 +131,6 @@ export default {
       }
     },
 
-    /*
-    유저가 초과되는 pageNumber 를 입력 시 조회되는 게시물은 없으나, 검색 버튼이 먹히질 않는 버그가 있음.
-     */
     /**
      * queryString 에 불필요한 값이 입력되었을 경우 초기 화면으로 redirect
      */

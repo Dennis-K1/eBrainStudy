@@ -24,7 +24,7 @@ public class Week4Application {
 		Resource[] res = new PathMatchingResourcePatternResolver().getResources(
 			"classpath:mapper/*.xml");
 		sqlSessionFactoryBean.setMapperLocations(res);
-		sqlSessionFactoryBean.setTypeAliasesPackage("com.week3.vo, com.week3.dto");
+		sqlSessionFactoryBean.setTypeAliasesPackage("com.week4.vo");
 		return sqlSessionFactoryBean.getObject();
 	}
 

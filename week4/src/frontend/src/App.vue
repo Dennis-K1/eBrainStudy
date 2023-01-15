@@ -3,6 +3,8 @@
     뷰 게시판
     <router-view/>
   </div>
+  <br>
+  <br>
   <a href="/">
     <button>처음으로</button>
   </a>

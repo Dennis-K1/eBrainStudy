@@ -1,9 +1,43 @@
 package com.week4.util;
 
 import com.week4.vo.BoardVO;
+import com.week4.vo.BoardVO.ArticleVO;
 import java.util.Objects;
 
 public class Validate {
+
+	/**
+	 * 게시글 입력값 서버측 유효성 검증
+	 *
+	 * @param articleVO 유저 입력값이 담긴 객체
+	 * @return 오류 있을 시 -1 반환
+	 */
+	public static int validateArticleInput(ArticleVO articleVO){
+		int categoryId = articleVO.getCategoryId();
+		String writer = articleVO.getWriter();
+		String title = articleVO.getTitle();
+		String password = articleVO.getPassword();
+		String content = articleVO.getContent();
+
+		if (Objects.equals(null,categoryId) || categoryId < 1 || categoryId > 3) {
+			return -1;
+		}
+		if (writer.length() < 2 || writer.length() > 4) {
+			return -1;
+		}
+		if (password.length() < 4 || password.length() > 16) {
+			return -1;
+		} else if (!password.matches("/([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~])|([!,@,#,$,%,^,&,*,?,_,~].*[a-zA-Z0-9])/")) {
+			return -1;
+		}
+		if (title.length() < 2 || title.length() > 4) {
+			return -1;
+		}
+		if (content.length() < 2 || content.length() > 4) {
+			return -1;
+		}
+		return 1;
+	}
 
 	/**
 	 * 인자가 공백일 시 null 반환
@@ -46,7 +80,7 @@ public class Validate {
 	private static void validateEmptyPageNumber(BoardVO.SearchVO searchVO) {
 		int pageNumber = 1;
 		Integer searchedPageNumber = searchVO.getPageNumber();
-		if (!Objects.equals(searchedPageNumber, null)) {
+		if (searchedPageNumber != 0) {
 			pageNumber = searchedPageNumber;
 		}
 		searchVO.setPageNumber(pageNumber);
